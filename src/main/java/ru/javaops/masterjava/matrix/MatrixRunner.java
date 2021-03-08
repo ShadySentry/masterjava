@@ -16,27 +16,27 @@ public class MatrixRunner {
         out("Single thread time, sec: %.3f", duration);
 
 
-        System.out.println("opt");
-        start = System.currentTimeMillis();
-        int[][] resultingMatrix2 = MatrixUtil.singleThreadMultiplyOpt(matrixA,matrixB);
-        duration = (System.currentTimeMillis() - start) / 1000.;
-        out("Single thread time, sec: %.3f", duration);
-
-        System.out.println("opt2");
-        start = System.currentTimeMillis();
-        int[][] resultingMatrix3 = MatrixUtil.singleThreadMultiplyOpt2(matrixA,matrixB);
-        duration = (System.currentTimeMillis() - start) / 1000.;
-        out("Single thread time, sec: %.3f", duration);
-
-        System.out.println("matrices are equals"+equals(resultingMatrix2,resultingMatrix3));
-
-        System.out.println("opt3");
-        start = System.currentTimeMillis();
-        int[][] resultingMatrix4 = MatrixUtil.singleThreadMultiplyOpt3(matrixA,matrixB);
-        duration = (System.currentTimeMillis() - start) / 1000.;
-        out("Single thread time, sec: %.3f", duration);
-
-        System.out.println("matrices are equals "+equals(resultingMatrix3,resultingMatrix4));
+//        System.out.println("opt");
+//        start = System.currentTimeMillis();
+//        int[][] resultingMatrix2 = MatrixUtil.singleThreadMultiplyOpt(matrixA,matrixB);
+//        duration = (System.currentTimeMillis() - start) / 1000.;
+//        out("Single thread time, sec: %.3f", duration);
+//
+//        System.out.println("opt2");
+//        start = System.currentTimeMillis();
+//        int[][] resultingMatrix3 = MatrixUtil.singleThreadMultiplyOpt2(matrixA,matrixB);
+//        duration = (System.currentTimeMillis() - start) / 1000.;
+//        out("Single thread time, sec: %.3f", duration);
+//
+//        System.out.println("matrices are equals"+equals(resultingMatrix2,resultingMatrix3));
+//
+//        System.out.println("opt3");
+//        start = System.currentTimeMillis();
+//        int[][] resultingMatrix4 = MatrixUtil.singleThreadMultiplyOpt3(matrixA,matrixB);
+//        duration = (System.currentTimeMillis() - start) / 1000.;
+//        out("Single thread time, sec: %.3f", duration);
+//
+//        System.out.println("matrices are equals "+equals(resultingMatrix3,resultingMatrix4));
 
     }
     private static boolean equals(int[][] matrixA, int[][] matrixB){
