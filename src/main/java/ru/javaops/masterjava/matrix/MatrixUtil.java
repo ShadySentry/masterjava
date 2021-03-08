@@ -18,45 +18,73 @@ public class MatrixUtil {
         final int matrixSize = matrixA.length;
         final int[][] matrixC = new int[matrixSize][matrixSize];
 
-        final int parts = 4;
-        final int portion = matrixSize / parts;
-        AtomicInteger processedCount = new AtomicInteger(0);
-        for (int step = 0; step < parts; step++) {
-            final int unprocessedItems = matrixSize - processedCount.get();
-            int currentPortion = Math.min(unprocessedItems, portion);
+        final int[] columnC = new int[matrixSize];
+        for (int j = 0; j < matrixSize; j++) {
+            for (int k = 0; k < matrixSize; k++) {
+                columnC[k] = matrixB[k][j];
+            }
 
-            final int[] columnC = new int[currentPortion];
-            for (int j = 0; j < matrixSize; j++) {
-                for (int k = 0; k < matrixSize; k++) {
-                    columnC[k] = matrixB[k][j];
-                }
-                int finalJ = j;
-                Future result = executor.submit(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        for (int i = 0; i < matrixSize; i++) {
-                                                            int[] thisRow = matrixA[i];
-                                                            int sum = 0;
-                                                            for (int k = 0; k < matrixSize; k++) {
-                                                                sum += thisRow[k] * columnC[k];
-                                                            }
+            int finalJ = j;
+            int[][]res=new int[matrixSize][matrixSize];
+            Future result= executor.submit(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    for (int i = 0; i < matrixSize; i++) {
+                                                        int[] thisRow = matrixA[i];
+                                                        int sum = 0;
+                                                        for (int k = 0; k < matrixSize; k++) {
+                                                            sum += thisRow[k] * columnC[k];
+                                                        }
+                                                        synchronized (matrixC){
                                                             matrixC[i][finalJ] = sum;
+
                                                         }
                                                     }
                                                 }
-                );
-//                for (int i = 0; i < matrixSize; i++) {
-//                    int[] thisRow = matrixA[i];
-//                    int sum = 0;
-//                    for (int k = 0; k < matrixSize; k++) {
-//                        sum += thisRow[k] * columnC[k];
-//                    }
-//                    matrixC[i][j] = sum;
-//                }
-            }
-
+                                            },res
+            );
         }
         return matrixC;
+
+//        final int parts = 4;
+//        final int portion = matrixSize / parts;
+//        AtomicInteger processedCount = new AtomicInteger(0);
+//        for (int step = 0; step < parts; step++) {
+//            final int unprocessedItems = matrixSize - processedCount.get();
+//            int currentPortion = Math.min(unprocessedItems, portion);
+//
+//            final int[] columnC = new int[currentPortion];
+//            for (int j = 0; j < matrixSize; j++) {
+//                for (int k = 0; k < matrixSize; k++) {
+//                    columnC[k] = matrixB[k][j];
+//                }
+//                int finalJ = j;
+//                Future result = executor.submit(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        for (int i = 0; i < matrixSize; i++) {
+//                                                            int[] thisRow = matrixA[i];
+//                                                            int sum = 0;
+//                                                            for (int k = 0; k < matrixSize; k++) {
+//                                                                sum += thisRow[k] * columnC[k];
+//                                                            }
+//                                                            matrixC[i][finalJ] = sum;
+//                                                        }
+//                                                    }
+//                                                }
+//                );
+////                for (int i = 0; i < matrixSize; i++) {
+////                    int[] thisRow = matrixA[i];
+////                    int sum = 0;
+////                    for (int k = 0; k < matrixSize; k++) {
+////                        sum += thisRow[k] * columnC[k];
+////                    }
+////                    matrixC[i][j] = sum;
+////                }
+//            }
+//
+//        }
+//        return matrixC;
     }
 
     // TODO optimize by https://habrahabr.ru/post/114797/
