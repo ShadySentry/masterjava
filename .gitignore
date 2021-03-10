@@ -3,3 +3,13 @@ out
 target
 *.iml
 log
+2_01_HW1_singleThreadMultiplyOpt.patch
+2_02_HW1_concurrentMultiply.patch
+2_03_HW1_concurrentMultiply2.patch
+2_04_JMH_Benchmark.patch
+2_05_JMH_main_jar.patch
+2_06_xml_scheme.patch
+2_07_JAXB.patch
+2_08_StAX.patch
+2_09_XPath.patch
+2_10_Xslt.patch
