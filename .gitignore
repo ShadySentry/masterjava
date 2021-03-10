@@ -13,3 +13,12 @@ log
 2_08_StAX.patch
 2_09_XPath.patch
 2_10_Xslt.patch
+lib/javax.annotation.jar
+lib/javax.ejb.jar
+lib/javax.jms.jar
+lib/javax.persistence.jar
+lib/javax.resource.jar
+lib/javax.servlet.jar
+lib/javax.servlet.jsp.jar
+lib/javax.servlet.jsp.jstl.jar
+lib/javax.transaction.jar
