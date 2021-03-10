@@ -11,7 +11,7 @@ public class MatrixRunner {
 
         System.out.println("base");
         long start = System.currentTimeMillis();
-        int[][] resultingMatrix = MatrixUtil.singleThreadMultiply(matrixA,matrixB);
+        int[][] resultingMatrix = MatrixUtil.singleThreadMultiplyOpt(matrixA,matrixB);
         double duration = (System.currentTimeMillis() - start) / 1000.;
         out("Single thread time, sec: %.3f", duration);
 
