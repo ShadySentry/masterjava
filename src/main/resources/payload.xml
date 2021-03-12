@@ -24,13 +24,14 @@
             <fullName>Full Name</fullName>
         </User>
         <User flag="superuser" city="spb" email="admin@javaops.ru" groupRefs="topjava08 topjava10 masterJava21">
-            <!--            <email>admin@javaops.ru</email>-->
+<!--            <email>admin@javaops.ru</email>-->
             <fullName>Admin</fullName>
         </User>
         <User flag="active" email="asdasd@DF.com" city="spb" groupRefs="masterJava21">
             <fullName>rnd user</fullName>
         </User>
         <User flag="deleted" city="spb" email="mail@yandex.ru">
+<!--            <email>mail@yandex.ru</email>-->
             <fullName>Deleted</fullName>
         </User>
     </Users>
