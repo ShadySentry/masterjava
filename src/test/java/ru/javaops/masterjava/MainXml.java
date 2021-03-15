@@ -9,7 +9,12 @@ import ru.javaops.masterjava.xml.schema.Project;
 import ru.javaops.masterjava.xml.schema.User;
 import ru.javaops.masterjava.xml.util.JaxbParser;
 import ru.javaops.masterjava.xml.util.Schemas;
+import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.events.XMLEvent;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.net.URL;
@@ -38,6 +43,8 @@ public class MainXml {
         try (Writer writer = Files.newBufferedWriter(Paths.get("out/users.html"))) {
             writer.write(html);
         }
+
+        users=parseByStax(projectName,payloadUrl);
     }
 
     private static Set<User> parseByJaxb(String projectName, URL payloadUrl) throws Exception {
@@ -59,6 +66,27 @@ public class MainXml {
                 .collect(
                         Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(User::getValue).thenComparing(User::getEmail)))
                 );
+    }
+
+    private static Set<User> parseByStax(String projectName, URL payloadUrl) throws Exception {
+        try(StaxStreamProcessor processor = new StaxStreamProcessor(payloadUrl.openStream())){
+            XMLStreamReader reader = processor.getReader();
+
+            HashMap<Project, Project.Group> projects;
+            Set<User> users= new TreeSet<>(Comparator.comparing(User::getValue).thenComparing(User::getEmail));
+
+            while (processor.doUntil(XMLEvent.START_ELEMENT,"Projects")){
+
+            }
+
+            //projects processing
+
+            //skip cities
+
+            //get users and filter by group that belongs to project
+
+            return users;
+        }
     }
 
     private static String toHtml(Set<User> users, String projectName) {
