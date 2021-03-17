@@ -1,5 +1,6 @@
 package ru.javaops.masterjava;
 
+import com.google.common.base.Splitter;
 import com.google.common.io.Resources;
 import j2html.tags.ContainerTag;
 import one.util.streamex.StreamEx;
@@ -10,26 +11,29 @@ import ru.javaops.masterjava.xml.schema.User;
 import ru.javaops.masterjava.xml.util.JaxbParser;
 import ru.javaops.masterjava.xml.util.Schemas;
 import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
+import ru.javaops.masterjava.xml.util.XsltProcessor;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.XMLEvent;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import javax.xml.stream.events.XMLEvent;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.nullToEmpty;
 import static j2html.TagCreator.*;
 
 public class MainXml {
 
+    private static final Comparator<User> USER_COMPARATOR = Comparator.comparing(User::getValue).thenComparing(User::getEmail);
+
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
-            System.out.println("Format: projectName");
+            System.out.println("Required argument: projectName");
             System.exit(1);
         }
         String projectName = args[0];
@@ -38,13 +42,20 @@ public class MainXml {
         Set<User> users = parseByJaxb(projectName, payloadUrl);
         users.forEach(System.out::println);
 
+        System.out.println();
         String html = toHtml(users, projectName);
         System.out.println(html);
         try (Writer writer = Files.newBufferedWriter(Paths.get("out/users.html"))) {
             writer.write(html);
         }
 
-        users=parseByStax(projectName,payloadUrl);
+        users = processByStax(projectName, payloadUrl);
+
+        System.out.println();
+        html = transform(projectName, payloadUrl);
+        try (Writer writer = Files.newBufferedWriter(Paths.get("out/groups.html"))) {
+            writer.write(html);
+        }
     }
 
     private static Set<User> parseByJaxb(String projectName, URL payloadUrl) throws Exception {
@@ -64,27 +75,41 @@ public class MainXml {
         return StreamEx.of(payload.getUsers().getUser())
                 .filter(u -> !Collections.disjoint(groups, u.getGroupRefs()))
                 .collect(
-                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(User::getValue).thenComparing(User::getEmail)))
+                        Collectors.toCollection(() -> new TreeSet<>(USER_COMPARATOR))
                 );
     }
 
-    private static Set<User> parseByStax(String projectName, URL payloadUrl) throws Exception {
-        try(StaxStreamProcessor processor = new StaxStreamProcessor(payloadUrl.openStream())){
-            XMLStreamReader reader = processor.getReader();
+    private static Set<User> processByStax(String projectName, URL payloadUrl) throws Exception {
 
-            HashMap<Project, Project.Group> projects;
-            Set<User> users= new TreeSet<>(Comparator.comparing(User::getValue).thenComparing(User::getEmail));
+        try (InputStream is = payloadUrl.openStream()) {
+            StaxStreamProcessor processor = new StaxStreamProcessor(is);
+            final Set<String> groupNames = new HashSet<>();
 
-            while (processor.doUntil(XMLEvent.START_ELEMENT,"Projects")){
-
+            // Projects loop
+            projects:
+            while (processor.startElement("Project", "Projects")) {
+                if (projectName.equals(processor.getAttribute("name"))) {
+                    while (processor.startElement("Group", "Project")) {
+                        groupNames.add(processor.getAttribute("name"));
+                    }
+                    break;
+                }
+            }
+            if (groupNames.isEmpty()) {
+                throw new IllegalArgumentException("Invalid " + projectName + " or no groups");
             }
 
-            //projects processing
+            // Users loop
+            Set<User> users = new TreeSet<>(USER_COMPARATOR);
 
-            //skip cities
-
-            //get users and filter by group that belongs to project
-
+            JaxbParser parser = new JaxbParser(User.class);
+            while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
+                String groupRefs = processor.getAttribute("groupRefs");
+                if (!Collections.disjoint(groupNames, Splitter.on(' ').splitToList(nullToEmpty(groupRefs)))) {
+                    User user = parser.unmarshal(processor.getReader(), User.class);
+                    users.add(user);
+                }
+            }
             return users;
         }
     }
@@ -102,5 +127,14 @@ public class MainXml {
                 head().with(title(projectName + " users")),
                 body().with(h1(projectName + " users"), table)
         ).render();
+    }
+
+    private static String transform(String projectName, URL payloadUrl) throws Exception {
+        URL xsl = Resources.getResource("groups.xsl");
+        try (InputStream xmlStream = payloadUrl.openStream(); InputStream xslStream = xsl.openStream()) {
+            XsltProcessor processor = new XsltProcessor(xslStream);
+            processor.setParameter("projectName", projectName);
+            return processor.transform(xmlStream);
+        }
     }
 }
