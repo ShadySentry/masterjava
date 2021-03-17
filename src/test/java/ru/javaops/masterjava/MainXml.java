@@ -49,7 +49,7 @@ public class MainXml {
             writer.write(html);
         }
 
-        users=parseByStax(projectName,payloadUrl);
+        users=processByStax(projectName,payloadUrl);
     }
 
     private static Set<User> parseByJaxb(String projectName, URL payloadUrl) throws Exception {
