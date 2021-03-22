@@ -7,7 +7,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import javax.servlet.ServletContext;
 
 public class ThymeleafUtil {
-//	private static TemplateEngine templateEngine;
+
     private ThymeleafUtil(){}
 
     public static TemplateEngine getTemplateEngine(ServletContext context) {
@@ -22,7 +22,4 @@ public class ThymeleafUtil {
         return templateEngine;
     }
 
-//    public static TemplateEngine getTemplateEngine() {
-//        return templateEngine;
-//    }
 }

@@ -3,16 +3,16 @@ package ru.javaops.masterjava.model;
 import java.util.Objects;
 
 public class User {
-    private final int id;
+    private final Integer id;
     private final String name;
     private final String email;
     private final UserFlag userFlag;
 
     public User(String fullName, String email,UserFlag flag){
-        this( Integer.parseInt(null),fullName,email,flag);
+        this( null,fullName,email,flag);
     }
 
-    public User(int id, String name, String email, UserFlag userFlag) {
+    public User(Integer id, String name, String email, UserFlag userFlag) {
         this.id = id;
         this.name = name;
         this.email = email;

@@ -1,10 +1,18 @@
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>Thymeleaf Demo</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  </head>
-  <body>
-    <p th:text="ASDASD">Welcome Offline</p>
-<!--    <p>Date : <span th:text="${currentDate}">Sat Oct 24 2015</span></p>-->
-  </body>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Export XML</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<form action="" method="post" enctype="multipart/form-data">
+    <h3>Select xml file to upload</h3>
+    <p>
+        <input type="file" name="fileToUpload" id="fileToUpload">
+    </p>
+    <p>
+        <input type="submit" name="submit" value="Upload">
+    </p>
+</form>
+</body>
 </html>
