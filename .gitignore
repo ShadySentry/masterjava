@@ -3,6 +3,3 @@ out
 target
 *.iml
 log
-*.patch
-ReleaseNotes.md
-README.md
