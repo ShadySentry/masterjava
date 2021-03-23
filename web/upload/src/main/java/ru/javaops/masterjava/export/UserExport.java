@@ -14,11 +14,11 @@ public class UserExport {
     public List<User> process(final InputStream is) throws XMLStreamException{
         StaxStreamProcessor processor =  new StaxStreamProcessor(is);
         List<User> users = new ArrayList<>();
-        while (processor.doUntil(XMLEvent.START_ELEMENT,"user")){
+        while (processor.doUntil(XMLEvent.START_ELEMENT,"User")){
 //            final Integer id=Integer.valueOf(processor.getAttribute("id"));
             final String email=processor.getAttribute("email");
+            final UserFlag flag = UserFlag.valueOf(processor.getAttribute("flag"));
             final String name = processor.getReader().getElementText();
-            final UserFlag flag = UserFlag.valueOf(processor.getAttribute("userFlag"));
 
             users.add(new User(name,email,flag));
         }
