@@ -13,3 +13,13 @@ patch 4/4_6_fix_convergence.patch
 patch 4/4_7_enforcer.patch
 patch 4/4_8_logging.patch
 patch 4/4_9_context.patch
+4/4_10_persist.patch
+4/4_1_HW3_pom_structure.patch
+4/4_2_HW3_thymeleaf_upload.patch
+4/4_3_HW3_upload_servlet3.patch
+4/4_4_HW3_jaxb_stax.patch
+4/4_5_dependencies.patch
+4/4_6_fix_convergence.patch
+4/4_7_enforcer.patch
+4/4_8_logging.patch
+4/4_9_context.patch
