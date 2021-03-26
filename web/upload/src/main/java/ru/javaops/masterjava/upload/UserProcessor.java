@@ -1,5 +1,8 @@
 package ru.javaops.masterjava.upload;
 
+import com.google.common.collect.ImmutableList;
+import ru.javaops.masterjava.persist.DBIProvider;
+import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.persist.model.User;
 import ru.javaops.masterjava.persist.model.UserFlag;
 import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
@@ -8,6 +11,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class UserProcessor {
@@ -24,5 +28,17 @@ public class UserProcessor {
             users.add(user);
         }
         return users;
+    }
+
+    public void persist(List<User> users){
+        if(users.isEmpty()){
+            return;
+        }
+        List<User> usersImmutable = ImmutableList.copyOf(users);
+        UserDao dao= DBIProvider.getDao(UserDao.class);
+        DBIProvider.getDBI().useTransaction((conn, status) -> {
+            usersImmutable.forEach(dao::insert);
+        });
+
     }
 }
