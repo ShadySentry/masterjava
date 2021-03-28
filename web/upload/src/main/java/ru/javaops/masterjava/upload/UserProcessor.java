@@ -11,8 +11,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class UserProcessor {
 
@@ -31,14 +31,37 @@ public class UserProcessor {
     }
 
     public void persist(List<User> users){
+        persist(users,10);
+    }
+
+    public void persist(List<User> users, int chunkSize)
+    {
         if(users.isEmpty()){
             return;
         }
         List<User> usersImmutable = ImmutableList.copyOf(users);
         UserDao dao= DBIProvider.getDao(UserDao.class);
         DBIProvider.getDBI().useTransaction((conn, status) -> {
-            usersImmutable.forEach(dao::insert);
+//            usersImmutable.forEach(dao::insert);
+            dao.insertAll(users,chunkSize);
+        });
+    }
+
+    public List<User> getUsersSorted(int limit){
+        if(limit<=0){
+            limit=10;
+        }
+
+        AtomicReference<List<User>> foundUsers = new AtomicReference<List<User>>();
+        UserDao dao=DBIProvider.getDao(UserDao.class);
+        int finalLimit = limit;
+
+        DBIProvider.getDBI().useTransaction((conn, status)->{
+            foundUsers.set(dao.getWithLimit(finalLimit));
         });
 
+        return foundUsers.get();
     }
+
+
 }

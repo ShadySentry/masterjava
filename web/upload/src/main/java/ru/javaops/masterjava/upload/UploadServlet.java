@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.javaops.masterjava.common.web.ThymeleafListener.engine;
@@ -25,6 +26,16 @@ public class UploadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final WebContext webContext = new WebContext(req, resp, req.getServletContext(), req.getLocale());
+        try{
+            List<User> users = new ArrayList<>();
+            users=userProcessor.getUsersSorted(20);
+
+
+            webContext.setVariable("users",users);
+        }catch (Exception ex){
+
+        }
+
         engine.process("upload", webContext, resp.getWriter());
     }
 
