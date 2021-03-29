@@ -1,28 +1,48 @@
 package ru.javaops.masterjava.upload;
 
+import one.util.streamex.IntStreamEx;
+import ru.javaops.masterjava.persist.DBIProvider;
+import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.persist.model.User;
 import ru.javaops.masterjava.persist.model.UserFlag;
+import ru.javaops.masterjava.xml.schema.ObjectFactory;
+import ru.javaops.masterjava.xml.util.JaxbParser;
+import ru.javaops.masterjava.xml.util.JaxbUnmarshaller;
 import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class UserProcessor {
+    private static final JaxbParser jaxbParser = new JaxbParser(ObjectFactory.class);
+    private static UserDao userDao = DBIProvider.getDao(UserDao.class);
 
-    public List<User> process(final InputStream is) throws XMLStreamException {
+    /*
+     * return users, already present in DB
+     */
+    public List<User> process(final InputStream is, int chunkSize) throws XMLStreamException, JAXBException {
         final StaxStreamProcessor processor = new StaxStreamProcessor(is);
         List<User> users = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        List<User> chunk = new ArrayList<>();
 
+        JaxbUnmarshaller unmarshaller = jaxbParser.createUnmarshaller();
         while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
-            final String email = processor.getAttribute("email");
-            final UserFlag flag = UserFlag.valueOf(processor.getAttribute("flag"));
-            final String fullName = processor.getReader().getElementText();
-            final User user = new User(fullName, email, flag);
+            ru.javaops.masterjava.xml.schema.User xmlUser = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.User.class);
+            final User user = new User(xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()));
             users.add(user);
         }
-        return users;
+        int[] result = userDao.insertBatch(users, chunkSize);
+        return IntStreamEx.range(0, users.size())
+                .filter(i -> result[i] == 0)
+                .mapToObj(users::get)
+                .toList();
     }
 }
