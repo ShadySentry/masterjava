@@ -16,6 +16,9 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class UserProcessor {
     private static final JaxbParser jaxbParser = new JaxbParser(ObjectFactory.class);
@@ -27,6 +30,8 @@ public class UserProcessor {
     public List<User> process(final InputStream is, int chunkSize) throws XMLStreamException, JAXBException {
         final StaxStreamProcessor processor = new StaxStreamProcessor(is);
         List<User> users = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        List<User> chunk = new ArrayList<>();
 
         JaxbUnmarshaller unmarshaller = jaxbParser.createUnmarshaller();
         while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
