@@ -27,9 +27,9 @@ public abstract class UserDao implements AbstractDao {
     abstract int getNextVal();
 
     @Transaction
-    public int getSeqAndSkip(int step){
-        int id=getNextVal();
-        DBIProvider.getDBI().useHandle(h->h.execute("ALTER SEQUENCE user_seq RESTART WITH "+(id+step)));
+    public int getSeqAndSkip(int step) {
+        int id = getNextVal();
+        DBIProvider.getDBI().useHandle(h -> h.execute("ALTER SEQUENCE user_seq RESTART WITH " + (id + step)));
         return id;
     }
 
@@ -49,16 +49,17 @@ public abstract class UserDao implements AbstractDao {
     public abstract void clean();
 
     //    https://habrahabr.ru/post/264281/
-    @SqlBatch("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS USER_FLAG))" +
+    @SqlBatch("INSERT INTO users (id, full_name, email, flag) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG))" +
             "ON CONFLICT DO NOTHING")
 //            "ON CONFLICT (email) DO UPDATE SET full_name=:fullName, flag=CAST(:flag AS USER_FLAG)")
     public abstract int[] insertBatch(@BindBean List<User> users, @BatchChunkSize int chunkSize);
 
-    public List<String> insertAndGetConflictEmails(List<User> users){
+
+    public List<String> insertAndGetConflictEmails(List<User> users) {
         int[] result = insertBatch(users, users.size());
         return IntStreamEx.range(0, users.size())
                 .filter(i -> result[i] == 0)
-                .mapToObj(index->users.get(index).getEmail())
+                .mapToObj(index -> users.get(index).getEmail())
                 .toList();
     }
 }
