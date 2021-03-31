@@ -1,13 +1,14 @@
 package ru.javaops.masterjava.upload;
 
-import one.util.streamex.IntStreamEx;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.persist.model.User;
 import ru.javaops.masterjava.persist.model.UserFlag;
 import ru.javaops.masterjava.xml.schema.ObjectFactory;
 import ru.javaops.masterjava.xml.util.JaxbParser;
-import ru.javaops.masterjava.xml.util.JaxbUnmarshaller;
 import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
 import javax.xml.bind.JAXBException;
@@ -19,23 +20,43 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+@Slf4j
 public class UserProcessor {
+    private static final int NUMBER_THREADS = 4;
+
     private static final JaxbParser jaxbParser = new JaxbParser(ObjectFactory.class);
     private static UserDao userDao = DBIProvider.getDao(UserDao.class);
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_THREADS);
+
+    @AllArgsConstructor
+    public static class FailedEmails {
+        public String emailsOrRange;
+        public String reason;
+
+        @Override
+        public String toString() {
+            return emailsOrRange + " : " + reason;
+        }
+    }
 
     /*
      * return failed users chunks
      */
-    public List<User> process(final InputStream is, int chunkSize) throws XMLStreamException, JAXBException {
-        final StaxStreamProcessor processor = new StaxStreamProcessor(is);
-        List<User> users = new ArrayList<>();
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
-        List<User> chunk = new ArrayList<>();
+    public List<FailedEmails> process(final InputStream is, int chunkSize) throws XMLStreamException, JAXBException {
+        log.info("Start processing with chunkSize=" + chunkSize);
 
-        JaxbUnmarshaller unmarshaller = jaxbParser.createUnmarshaller();
+        Map<String, Future<List<String>>> chunkFutures = new LinkedHashMap<>();  // ordered map (emailRange -> chunk future)
+
+        int id = userDao.getSeqAndSkip(chunkSize);
+        List<User> chunk = new ArrayList<>(chunkSize);
+        val processor = new StaxStreamProcessor(is);
+        val unmarshaller = jaxbParser.createUnmarshaller();
+
         while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
             ru.javaops.masterjava.xml.schema.User xmlUser = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.User.class);
             final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()));

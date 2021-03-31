@@ -30,3 +30,10 @@ patch 4/4_9_context.patch
 5/5_3_HW4_already_present.patch
 5/5_2_HW4_webapp_users.patch
 5/5_1_HW4_upload_chunk.patch
+patch 5/5_7_lombok.patch
+patch 5/5_6_typesafe_config.patch
+patch 5/5_5_HW4_parallel2.patch
+patch 5/5_4_HW4_parallel.patch
+patch 5/5_3_HW4_already_present.patch
+patch 5/5_2_HW4_webapp_users.patch
+patch 5/5_1_HW4_upload_chunk.patch
