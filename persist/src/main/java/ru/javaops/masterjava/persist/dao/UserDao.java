@@ -23,13 +23,13 @@ public abstract class UserDao implements AbstractDao {
         return user;
     }
 
-    @SqlQuery("SELECT nextval('user_seq')")
+    @SqlQuery("SELECT nextval('common_seq')")
     abstract int getNextVal();
 
     @Transaction
     public int getSeqAndSkip(int step) {
         int id = getNextVal();
-        DBIProvider.getDBI().useHandle(h -> h.execute("ALTER SEQUENCE user_seq RESTART WITH " + (id + step)));
+        DBIProvider.getDBI().useHandle(h -> h.execute("ALTER SEQUENCE common_seq RESTART WITH " + (id + step)));
         return id;
     }
 

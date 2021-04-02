@@ -1,10 +1,6 @@
 package ru.javaops.masterjava.persist.model;
 
-import com.sun.istack.internal.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -15,5 +11,6 @@ public class City extends RefEntity{
         this.name = name;
     }
 
-    private @NotNull String name;
+    private @NonNull
+    String name;
 }

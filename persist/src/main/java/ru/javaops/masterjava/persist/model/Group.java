@@ -1,7 +1,6 @@
 package ru.javaops.masterjava.persist.model;
 
 import com.bertoncelj.jdbi.entitymapper.Column;
-import com.sun.istack.internal.NotNull;
 import lombok.*;
 
 @RequiredArgsConstructor
@@ -11,11 +10,11 @@ import lombok.*;
 @Getter
 public class Group extends BaseEntity{
 
-    @NotNull
+    @NonNull
     private String name;
 
     @Column("group_type")
-    @NotNull
+    @NonNull
     private GroupType groupType;
 
     @Column("project_id")
