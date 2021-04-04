@@ -6,6 +6,7 @@ import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.model.City;
+import ru.javaops.masterjava.persist.model.Project;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,9 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
-public abstract class CityDao implements AbstractDao {
-
-
+public abstract class ProjectDao implements AbstractDao {
     @SqlQuery("SELECT nextval('common_seq')")
     abstract int getNextVal();
 
@@ -26,23 +25,25 @@ public abstract class CityDao implements AbstractDao {
         return id;
     }
 
-    @SqlUpdate("insert into city (ref,name) values(:ref, :name)")
-    abstract void insert(@BindBean City city);
+    @SqlUpdate("insert into project (ref, name, description) values(:ref, :name, :description)")
+    abstract void insert(@BindBean Project project);
 
-    @SqlBatch("INSERT INTO city (ref, name) VALUES (:ref, :name)")
-    abstract void insertBatch(@BindBean Collection<City> cities);
+    @SqlBatch("INSERT INTO project (ref, name, description) VALUES (:ref, :name, :description)")
+    abstract void insertBatch(@BindBean Collection<Project> projects);
 
-    @SqlQuery("Select * from city Limit :limit ")
-    abstract void getWithLimit(@Bind int limit);
+    @SqlQuery("Select * from project Limit :limit ")
+    abstract List<Project> getWithLimit(@Bind int limit);
 
-    @SqlQuery("select * from city")
-    public abstract List<City> getAll();
+    @SqlQuery("select * from project")
+    public abstract List<Project> getAll();
 
-    public Map<String, City> getAsMap() {
-        return StreamEx.of(getAll()).toMap(City::getRef, Function.identity());
+    public Map<String, Project> getAsMap() {
+        return StreamEx.of(getAll()).toMap(Project::getRef, Function.identity());
     }
 
-    @SqlUpdate("TRUNCATE city cascade")
+    @SqlQuery("TRUNCATE project CASCADE")
     @Override
-    public abstract void clean();
+    public void clean() {
+
+    }
 }
