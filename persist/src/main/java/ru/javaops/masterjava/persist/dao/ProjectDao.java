@@ -3,9 +3,9 @@ package ru.javaops.masterjava.persist.dao;
 import com.bertoncelj.jdbi.entitymapper.EntityMapperFactory;
 import one.util.streamex.StreamEx;
 import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.customizers.BatchChunkSize;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import ru.javaops.masterjava.persist.DBIProvider;
-import ru.javaops.masterjava.persist.model.City;
 import ru.javaops.masterjava.persist.model.Project;
 
 import java.util.Collection;
@@ -15,6 +15,16 @@ import java.util.function.Function;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
 public abstract class ProjectDao implements AbstractDao {
+    public Project insert(Project project){
+        if(project.isNew()){
+            int id = insertGeneratedId(project);
+            project.setId(id);
+        }else {
+            insertWIthId(project);
+        }
+        return project;
+    }
+
     @SqlQuery("SELECT nextval('common_seq')")
     abstract int getNextVal();
 
@@ -25,25 +35,27 @@ public abstract class ProjectDao implements AbstractDao {
         return id;
     }
 
-    @SqlUpdate("insert into project (ref, name, description) values(:ref, :name, :description)")
-    abstract void insert(@BindBean Project project);
+    @SqlUpdate("insert into project (id, name, description) values(:id, :name, :description)")
+    abstract void insertWIthId(@BindBean Project project);
 
-    @SqlBatch("INSERT INTO project (ref, name, description) VALUES (:ref, :name, :description)")
-    abstract void insertBatch(@BindBean Collection<Project> projects);
+    @SqlUpdate("insert into project (name, description) values(:name, :description)")
+    @GetGeneratedKeys
+    abstract int insertGeneratedId(@BindBean Project project);
 
-    @SqlQuery("Select * from project Limit :limit ")
-    abstract List<Project> getWithLimit(@Bind int limit);
+    @SqlBatch("INSERT INTO project (id, name, description) VALUES (:id, :name, :description)")
+    public abstract void insertBatch(@BindBean Collection<Project> projects, @BatchChunkSize int chunkSize);
+
+    @SqlQuery("Select * FROM project ORDER BY name Limit :it")
+    public abstract List<Project> getWithLimit(@Bind int limit);
 
     @SqlQuery("select * from project")
     public abstract List<Project> getAll();
 
-    public Map<String, Project> getAsMap() {
-        return StreamEx.of(getAll()).toMap(Project::getRef, Function.identity());
+    public Map<Integer, Project> getAsMap() {
+        return StreamEx.of(getAll()).toMap(Project::getId, Function.identity());
     }
 
-    @SqlQuery("TRUNCATE project CASCADE")
+    @SqlUpdate("TRUNCATE project cascade")
     @Override
-    public void clean() {
-
-    }
+    public abstract void clean();
 }

@@ -3,20 +3,14 @@ package ru.javaops.masterjava.persist.model;
 import com.bertoncelj.jdbi.entitymapper.Column;
 import lombok.*;
 
-@RequiredArgsConstructor
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Getter
-public class Group extends BaseEntity{
+@ToString(callSuper = true)
+public class Group extends BaseEntity {
 
-    @NonNull
-    private String name;
-
-    @Column("group_type")
-    @NonNull
-    private GroupType groupType;
-
-    @Column("project_id")
-    private Integer projectId;
+    @NonNull private String name;
+    @NonNull private GroupType type;
+    @NonNull @Column("project_id") private int projectId;
 }

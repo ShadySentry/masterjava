@@ -5,20 +5,20 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.javaops.masterjava.persist.UserCitiTestData;
-import ru.javaops.masterjava.persist.model.User;
+import ru.javaops.masterjava.persist.model.City;
 
 import java.util.List;
 
-import static ru.javaops.masterjava.persist.UserCitiTestData.FIST5_USERS;
+import static ru.javaops.masterjava.persist.UserCitiTestData.FIRST2_CITIES;
 
-public class UserDaoTest extends AbstractDaoTest<UserDao> {
+public class CityDaoTest extends AbstractDaoTest<CityDao> {
 
-    public UserDaoTest() {
-        super(UserDao.class);
+    public CityDaoTest() {
+        super(CityDao.class);
     }
 
     @BeforeClass
-    public static void init() throws Exception {
+    public static void beforeClass() throws Exception {
         UserCitiTestData.init();
     }
 
@@ -29,14 +29,14 @@ public class UserDaoTest extends AbstractDaoTest<UserDao> {
 
     @Test
     public void getWithLimit() {
-        List<User> users = dao.getWithLimit(5);
-        Assert.assertEquals(FIST5_USERS, users);
+        List<City> cities = dao.getWithLimit(2);
+        Assert.assertEquals(FIRST2_CITIES,dao.getWithLimit(2));
     }
 
     @Test
     public void insertBatch() throws Exception {
         dao.clean();
-        dao.insertBatch(FIST5_USERS, 5);
-        Assert.assertEquals(5, dao.getWithLimit(100).size());
+        dao.insertBatch(FIRST2_CITIES,2);
+        Assert.assertEquals(2,dao.getWithLimit(100).size());
     }
 }

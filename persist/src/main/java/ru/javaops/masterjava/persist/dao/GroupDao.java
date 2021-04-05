@@ -1,54 +1,37 @@
 package ru.javaops.masterjava.persist.dao;
 
 import com.bertoncelj.jdbi.entitymapper.EntityMapperFactory;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import one.util.streamex.StreamEx;
-import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.BindBean;
+import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
-import ru.javaops.masterjava.persist.DBIProvider;
-import ru.javaops.masterjava.persist.model.City;
 import ru.javaops.masterjava.persist.model.Group;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
 public abstract class GroupDao implements AbstractDao {
 
-    @SqlUpdate("TRUNCATE groups CASCADE")
+    @SqlUpdate("TRUNCATE groups CASCADE ")
     @Override
-    public void clean() {
+    public abstract void clean();
+
+    @SqlQuery("SELECT * FROM groups ORDER BY name")
+    public abstract List<Group> getAll();
+
+    public Map<String, Group> getAsMap() {
+        return StreamEx.of(getAll()).toMap(Group::getName, g -> g);
     }
 
-    @SqlQuery("SELECT nextval 'common_seq")
-    abstract int getNextVal();
+    @SqlUpdate("INSERT INTO groups (name, type, project_id)  VALUES (:name, CAST(:type AS group_type), :projectId)")
+    @GetGeneratedKeys
+    public abstract int insertGeneratedId(@BindBean Group groups);
 
-    @Transaction
-    public int getAndSkip(int step) {
-        int id = getNextVal();
-        DBIProvider.getDBI().useHandle(h -> h.execute("ALTER SEQUENCE common_seq RESTART WITH " + id + step));
-        return id;
+    public void insert(Group groups) {
+        int id = insertGeneratedId(groups);
+        groups.setId(id);
     }
-
-    @SqlQuery("INSERT INTO groups (name, project_id,group_type) VALUES (:name, :projectId, : CAST(groupType AS GROUP_TYPE)")
-    abstract void insert(@BindBean Group group);
-
-    @SqlQuery("INSERT INTO groups (name, project_id,group_type) VALUES (:name, :projectId, : CAST(groupType AS GROUP_TYPE)")
-    abstract void insertBatch(@BindBean Collection<Group> group);
-
-    @SqlQuery("SELECT * FROM groups LIMIT :limit")
-    abstract List<Group> getWIthLimit(@Bind int limit);
-
-    @SqlQuery("SELECT * FROM groups")
-    abstract List<Group> getAll();
-
-    public Map<Integer, Group> getAsMap() {
-        return StreamEx.of(getAll()).toMap(Group::getId, Function.identity());
-    }
-
-
 }

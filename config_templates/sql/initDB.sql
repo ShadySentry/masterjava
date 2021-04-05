@@ -9,7 +9,7 @@ DROP TYPE IF EXISTS user_flag;
 DROP TYPE IF EXISTS group_type;
 
 CREATE TYPE user_flag AS ENUM ('active', 'deleted', 'superuser');
-CREATE TYPE group_type AS ENUM ('REGISTERING', 'CURRENT', 'FINISHED');
+CREATE TYPE group_type AS ENUM ('registering', 'current', 'finished');
 
 CREATE SEQUENCE common_seq START 100000;
 
@@ -41,13 +41,13 @@ create table groups
 (
     id                      INTEGER PRIMARY KEY DEFAULT nextval('common_seq'),
     name                    TEXT       NOT NULL,
-    group_type group_type   NOT NULL,
+    type group_type   NOT NULL,
     project_id              integer references project(id)
 );
 
 
 create table users_groups(
-    user_id integer not null references users(id),
-    group_id integer not null references groups(id),
-    constraint users_group_idx unique (user_id,group_id)
+                             user_id integer not null references users(id),
+                             group_id integer not null references groups(id),
+                             constraint users_group_idx unique (user_id,group_id)
 )

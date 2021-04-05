@@ -3,6 +3,7 @@ package ru.javaops.masterjava.persist.dao;
 import com.bertoncelj.jdbi.entitymapper.EntityMapperFactory;
 import one.util.streamex.StreamEx;
 import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.customizers.BatchChunkSize;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.model.City;
@@ -27,15 +28,15 @@ public abstract class CityDao implements AbstractDao {
     }
 
     @SqlUpdate("insert into city (ref,name) values(:ref, :name)")
-    abstract void insert(@BindBean City city);
+    public abstract void insert(@BindBean City city);
 
     @SqlBatch("INSERT INTO city (ref, name) VALUES (:ref, :name)")
-    abstract void insertBatch(@BindBean Collection<City> cities);
+    public abstract void insertBatch(@BindBean Collection<City> cities, @BatchChunkSize int chunkSize);
 
-    @SqlQuery("Select * from city Limit :limit ")
-    abstract void getWithLimit(@Bind int limit);
+    @SqlQuery("SELECT * FROM city ORDER BY name Limit :it")
+    public abstract List<City> getWithLimit(@Bind int limit);
 
-    @SqlQuery("select * from city")
+    @SqlQuery("SELECT * FROM city ORDER BY name")
     public abstract List<City> getAll();
 
     public Map<String, City> getAsMap() {
