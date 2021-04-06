@@ -33,6 +33,6 @@ public class GroupDaoTest extends AbstractDaoTest<GroupDao> {
             Assert.assertTrue(GROUPS.containsValue(group));
         });
 
-        Assert.assertTrue(GROUPS.values().size()==groups.size());
+        Assert.assertEquals(GROUPS.values().size(), groups.size());
     }
 }

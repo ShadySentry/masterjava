@@ -13,6 +13,7 @@ import java.util.Set;
 
 import static ru.javaops.masterjava.persist.GroupTestData.TOPJAVA_06_ID;
 import static ru.javaops.masterjava.persist.UserCityTestData.ADMIN;
+import static ru.javaops.masterjava.persist.UserGroupTestData.getByGroupId;
 
 public class UserGroupTest extends AbstractDaoTest<UserGroupDao> {
 
@@ -32,7 +33,11 @@ public class UserGroupTest extends AbstractDaoTest<UserGroupDao> {
 
     @Test
     public void getUserIdsTest() {
-        Set<Integer> usersId = dao.getUserIds(GroupTestData.TOPJAVA_06_ID);
-        Assert.assertSame(ADMIN.getId(), usersId.stream().findFirst().get());
+        Set<Integer> usersId = dao.getUserIds(GroupTestData.MASTERJAVA_01_ID);
+        Assert.assertEquals(getByGroupId(GroupTestData.MASTERJAVA_01_ID), usersId);
+
+        usersId = dao.getUserIds(TOPJAVA_06_ID);
+        Assert.assertEquals(getByGroupId(TOPJAVA_06_ID),usersId);
+
     }
 }
