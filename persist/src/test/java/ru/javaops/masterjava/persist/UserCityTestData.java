@@ -12,7 +12,7 @@ import java.util.List;
 import static ru.javaops.masterjava.persist.model.GroupType.current;
 import static ru.javaops.masterjava.persist.model.GroupType.registering;
 
-public class UserCitiTestData {
+public class UserCityTestData {
 
     public static City spb;
     public static City msk;
@@ -27,31 +27,7 @@ public class UserCitiTestData {
     public static User USER3;
     public static List<User> FIST5_USERS;
 
-//    public static Project project1;
-//    public static Project project2;
-//    public static Project project3;
-//    public static List<Project> FIRST2_PROJECTS;
-//
-//    public static Group group1;
-//    public static Group group2;
-//    public static Group group3;
-//    public static Group group4;
-//    public static List<Group> FIRST3_GROUPS;
-//
-//    public static UserGroup userGroup1;
-//    public static UserGroup userGroup2;
-
     public static void init() {
-//        project1 = new Project(1, "Topjava", "topjava description");
-//        project2 = new Project(2, "Masterjava", "masterjava description");
-//        project3 = new Project(3, "rnd", "rnd decription");
-//        FIRST2_PROJECTS = ImmutableList.of(project1, project2);
-//
-//        group1 = new Group("topjava 6", REGISTERING, project1.getId());
-//        group2 = new Group("topjava 21", REGISTERING, project1.getId());
-//        group3 = new Group("topjava 20", CURRENT, project1.getId());
-//        group4 = new Group("masterjava 21", CURRENT, project2.getId());
-//        FIRST3_GROUPS = ImmutableList.of(group1, group2, group3);
 
         spb = new City("spb", "Пітєр");
         msk = new City("msk", "Москва");
@@ -69,20 +45,6 @@ public class UserCitiTestData {
     }
 
     public static void setUp() {
-//        ProjectDao projectDao = DBIProvider.getDao(ProjectDao.class);
-//        projectDao.clean();
-//        DBIProvider.getDBI().useTransaction((conn, status) -> {
-//            FIRST2_PROJECTS.forEach(projectDao::insert);
-//            projectDao.insert(project3);
-//        });
-//
-//        GroupDao groupDao = DBIProvider.getDao(GroupDao.class);
-//        groupDao.clean();
-//        DBIProvider.getDBI().useTransaction((conn, status) -> {
-//            FIRST3_GROUPS.forEach(groupDao::insert);
-//            groupDao.insert(group4);
-//        });
-
         CityDao cityDao = DBIProvider.getDao(CityDao.class);
         cityDao.clean();
         DBIProvider.getDBI().useTransaction((conn, status) -> {

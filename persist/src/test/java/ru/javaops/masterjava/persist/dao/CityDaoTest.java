@@ -4,12 +4,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import ru.javaops.masterjava.persist.UserCitiTestData;
+import ru.javaops.masterjava.persist.UserCityTestData;
 import ru.javaops.masterjava.persist.model.City;
 
 import java.util.List;
 
-import static ru.javaops.masterjava.persist.UserCitiTestData.FIRST2_CITIES;
+import static ru.javaops.masterjava.persist.UserCityTestData.FIRST2_CITIES;
 
 public class CityDaoTest extends AbstractDaoTest<CityDao> {
 
@@ -19,12 +19,12 @@ public class CityDaoTest extends AbstractDaoTest<CityDao> {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        UserCitiTestData.init();
+        UserCityTestData.init();
     }
 
     @Before
     public void setUp() throws Exception {
-        UserCitiTestData.setUp();
+        UserCityTestData.setUp();
     }
 
     @Test

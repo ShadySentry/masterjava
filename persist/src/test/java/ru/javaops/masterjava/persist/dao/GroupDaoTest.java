@@ -29,6 +29,10 @@ public class GroupDaoTest extends AbstractDaoTest<GroupDao> {
     @Test
     public void getAllTest() {
         List<Group>groups = dao.getAll();
-        Assert.assertEquals(GROUPS.values(),groups);
+        groups.forEach(group->{
+            Assert.assertTrue(GROUPS.containsValue(group));
+        });
+
+        Assert.assertTrue(GROUPS.values().size()==groups.size());
     }
 }
