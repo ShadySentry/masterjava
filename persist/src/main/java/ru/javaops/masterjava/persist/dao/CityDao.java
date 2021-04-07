@@ -33,6 +33,10 @@ public abstract class CityDao implements AbstractDao {
     @SqlBatch("INSERT INTO city (ref, name) VALUES (:ref, :name)")
     public abstract void insertBatch(@BindBean Collection<City> cities, @BatchChunkSize int chunkSize);
 
+
+    @SqlBatch("INSERT INTO city (ref, name) VALUES (:ref, :name)")
+    public abstract void insertBatch(@BindBean Collection<City> cities);
+
     @SqlQuery("SELECT * FROM city ORDER BY name Limit :it")
     public abstract List<City> getWithLimit(@Bind int limit);
 

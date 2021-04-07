@@ -41,7 +41,4 @@ public class UserGroupTestData {
     public static Set<Integer> getByGroupId(int groupId){
         return UserGroupDao.getByGroupId(groupId,USER_GROUPS);
     }
-
-
-
 }
