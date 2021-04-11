@@ -19,7 +19,7 @@ public abstract class GroupDao implements AbstractDao {
     @Override
     public abstract void clean();
 
-    @SqlQuery("SELECT * FROM groups ORDER BY id")
+    @SqlQuery("SELECT * FROM groups ORDER BY name")
     public abstract List<Group> getAll();
 
     public Map<String, Group> getAsMap() {

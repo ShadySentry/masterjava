@@ -51,8 +51,8 @@ public abstract class ProjectDao implements AbstractDao {
     @SqlQuery("select * from project")
     public abstract List<Project> getAll();
 
-    public Map<Integer, Project> getAsMap() {
-        return StreamEx.of(getAll()).toMap(Project::getId, Function.identity());
+    public Map<String, Project> getAsMap() {
+        return StreamEx.of(getAll()).toMap(Project::getName, Function.identity());
     }
 
     @SqlUpdate("TRUNCATE project cascade")

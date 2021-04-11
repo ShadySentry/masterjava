@@ -24,6 +24,9 @@ public abstract class UserGroupDao implements AbstractDao {
     @SqlBatch("INSERT INTO users_groups (user_id, group_id) VALUES(:userId, :groupId)")
     public abstract void insertBatch(@BindBean Collection<UserGroup> userGroup, @BatchChunkSize int chunkSize);
 
+    @SqlBatch("INSERT INTO user_group (user_id, group_id) VALUES (:userId, :groupId)")
+    public abstract void insertBatch(@BindBean List<UserGroup> userGroups);
+
     @SqlQuery("SELECT user_id FROM users_groups WHERE group_id =:it")
     public abstract Set<Integer> getUserIds(@Bind int groupId);
 

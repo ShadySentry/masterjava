@@ -21,7 +21,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven3-plugin</artifactId>
-                <version>1.9.2</version>
+                <version>1.9.3</version>
                 <configuration>
                     <container>
                         <containerId>tomcat9x</containerId>
@@ -68,7 +68,6 @@
             </plugin>
 
         </plugins>
-
 
         <resources>
             <resource>
