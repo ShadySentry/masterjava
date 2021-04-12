@@ -11,6 +11,7 @@ import java.util.List;
 
 import static ru.javaops.masterjava.persist.model.GroupType.current;
 import static ru.javaops.masterjava.persist.model.GroupType.registering;
+import ru.javaops.masterjava.persist.model.type.UserFlag;
 
 public class UserCityTestData {
 

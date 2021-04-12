@@ -2,12 +2,11 @@ package ru.javaops.masterjava.persist.model;
 
 import lombok.*;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @EqualsAndHashCode
-public class RefEntity {
+abstract public class RefEntity {
     @Getter
-    @NonNull
-    private String ref;
+    @NonNull private String ref;
 }

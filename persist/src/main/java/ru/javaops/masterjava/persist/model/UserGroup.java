@@ -7,14 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserGroup {
-    @NonNull
-    @Column("user_id")
-    private Integer userId;
-
-    @NonNull
-    @Column("group_id")
-    private Integer groupId;
+    @NonNull @Column("user_id") private Integer userId;
+    @NonNull @Column("group_id") private Integer groupId;
 }
