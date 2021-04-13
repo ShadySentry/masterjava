@@ -1,4 +1,4 @@
-package ru.javaops.masterjava.persist.model;
+package ru.javaops.masterjava.persist.model.type;
 
 import com.bertoncelj.jdbi.entitymapper.Column;
 import lombok.AllArgsConstructor;

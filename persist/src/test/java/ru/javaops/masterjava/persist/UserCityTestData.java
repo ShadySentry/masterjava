@@ -2,15 +2,11 @@ package ru.javaops.masterjava.persist;
 
 import com.google.common.collect.ImmutableList;
 import ru.javaops.masterjava.persist.dao.CityDao;
-import ru.javaops.masterjava.persist.dao.GroupDao;
-import ru.javaops.masterjava.persist.dao.ProjectDao;
 import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.persist.model.*;
 
 import java.util.List;
 
-import static ru.javaops.masterjava.persist.model.GroupType.current;
-import static ru.javaops.masterjava.persist.model.GroupType.registering;
 import ru.javaops.masterjava.persist.model.type.UserFlag;
 
 public class UserCityTestData {

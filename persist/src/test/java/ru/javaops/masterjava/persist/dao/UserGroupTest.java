@@ -5,14 +5,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.javaops.masterjava.persist.GroupTestData;
-import ru.javaops.masterjava.persist.UserCityTestData;
 import ru.javaops.masterjava.persist.UserGroupTestData;
-import ru.javaops.masterjava.persist.model.UserGroup;
 
 import java.util.Set;
 
 import static ru.javaops.masterjava.persist.GroupTestData.TOPJAVA_06_ID;
-import static ru.javaops.masterjava.persist.UserCityTestData.ADMIN;
 import static ru.javaops.masterjava.persist.UserGroupTestData.getByGroupId;
 
 public class UserGroupTest extends AbstractDaoTest<UserGroupDao> {
