@@ -32,17 +32,6 @@ public class UserProcessor {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_THREADS);
 
-//    @AllArgsConstructor
-//    public static class FailedEmails {
-//        public String emailsOrRange;
-//        public String reason;
-//
-//        @Override
-//        public String toString() {
-//            return emailsOrRange + " : " + reason;
-//        }
-//    }
-
     /*
      * return failed users chunks
      */
@@ -58,11 +47,12 @@ public class UserProcessor {
         List<String> cityDoesnExist = new ArrayList<>();
 
         while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
+            String cityRef=processor.getAttribute("city");
             ru.javaops.masterjava.xml.schema.User xmlUser = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.User.class);
-            if (!cities.containsKey(xmlUser.getCity())) {
-                cityDoesnExist.add("city" + xmlUser.getCity() + "doesnt exists in user record - " + xmlUser.getValue() + " email" + xmlUser.getEmail());
+            if (cities.get(cityRef)==null) {
+                cityDoesnExist.add("city" + cityRef + "doesnt exists in user record - " + xmlUser.getValue() + " email" + xmlUser.getEmail());
             } else {
-                final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()), xmlUser.getCity());
+                final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()), cityRef);
                 chunk.add(user);
                 if (chunk.size() == chunkSize) {
                     addChunkFutures(chunkFutures, chunk);
