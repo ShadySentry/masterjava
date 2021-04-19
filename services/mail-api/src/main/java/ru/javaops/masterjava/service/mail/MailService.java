@@ -1,5 +1,7 @@
 package ru.javaops.masterjava.service.mail;
 
+import org.apache.commons.mail.Email;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -18,4 +20,5 @@ public interface MailService {
             @WebParam(name = "cc") List<Addressee> cc,
             @WebParam(name = "subject") String subject,
             @WebParam(name = "body") String body);
+
 }
