@@ -22,5 +22,22 @@
             <artifactId>mail-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>ru.javaops</groupId>-->
+<!--            <artifactId>persist</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.bertoncelj.jdbi.entitymapper</groupId>
+            <artifactId>jdbi-entity-mapper</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.javaops</groupId>
+            <artifactId>persist</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
