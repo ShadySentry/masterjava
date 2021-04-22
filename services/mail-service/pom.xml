@@ -23,9 +23,16 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ru.javaops</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>persist</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>persist</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.bertoncelj.jdbi.entitymapper</groupId>-->

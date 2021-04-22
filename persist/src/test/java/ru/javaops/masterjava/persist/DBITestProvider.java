@@ -1,9 +1,13 @@
 package ru.javaops.masterjava.persist;
 
+import com.typesafe.config.Config;
+import ru.javaops.masterjava.config.Configs;
+
 import java.sql.DriverManager;
 
 public class DBITestProvider {
     public static void initDBI() {
+//        Config db = Configs.getConfig("persist.conf","db");
         initDBI("jdbc:postgresql://localhost:5432/masterjava", "user", "password");
     }
 

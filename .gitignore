@@ -13,23 +13,23 @@ patch 4/4_6_fix_convergence.patch
 patch 4/4_7_enforcer.patch
 patch 4/4_8_logging.patch
 patch 4/4_9_context.patch
-4/4_10_persist.patch
-4/4_1_HW3_pom_structure.patch
-4/4_2_HW3_thymeleaf_upload.patch
-4/4_3_HW3_upload_servlet3.patch
-4/4_4_HW3_jaxb_stax.patch
-4/4_5_dependencies.patch
-4/4_6_fix_convergence.patch
-4/4_7_enforcer.patch
-4/4_8_logging.patch
-4/4_9_context.patch
-5/5_7_lombok.patch
-5/5_6_typesafe_config.patch
-5/5_5_HW4_parallel2.patch
-5/5_4_HW4_parallel.patch
-5/5_3_HW4_already_present.patch
-5/5_2_HW4_webapp_users.patch
-5/5_1_HW4_upload_chunk.patch
+.patches/4/4_10_persist.patch
+.patches/4/4_1_HW3_pom_structure.patch
+.patches/4/4_2_HW3_thymeleaf_upload.patch
+.patches/4/4_3_HW3_upload_servlet3.patch
+.patches/4/4_4_HW3_jaxb_stax.patch
+.patches/4/4_5_dependencies.patch
+.patches/4/4_6_fix_convergence.patch
+.patches/4/4_7_enforcer.patch
+.patches/4/4_8_logging.patch
+.patches/4/4_9_context.patch
+.patches/5/5_7_lombok.patch
+.patches/5/5_6_typesafe_config.patch
+.patches/5/5_5_HW4_parallel2.patch
+.patches/5/5_4_HW4_parallel.patch
+.patches/5/5_3_HW4_already_present.patch
+.patches/5/5_2_HW4_webapp_users.patch
+.patches/5/5_1_HW4_upload_chunk.patch
 patch 5/5_7_lombok.patch
 patch 5/5_6_typesafe_config.patch
 patch 5/5_5_HW4_parallel2.patch
@@ -37,8 +37,30 @@ patch 5/5_4_HW4_parallel.patch
 patch 5/5_3_HW4_already_present.patch
 patch 5/5_2_HW4_webapp_users.patch
 patch 5/5_1_HW4_upload_chunk.patch
-6/6_5_web_services.patch
-6/6_4_HW5_add_CityProcessor.patch
-6/6_3_HW5_add_PayloadProcessor.patch
-6/6_2_HW5_dao_test.patch
-6/6_1_HW5_model_sql.patch
+.patches/6/6_5_web_services.patch
+.patches/6/6_4_HW5_add_CityProcessor.patch
+.patches/6/6_3_HW5_add_PayloadProcessor.patch
+.patches/6/6_2_HW5_dao_test.patch
+.patches/6/6_1_HW5_model_sql.patch
+/.patches/4/4_1_HW3_pom_structure.patch
+/.patches/4/4_2_HW3_thymeleaf_upload.patch
+/.patches/4/4_3_HW3_upload_servlet3.patch
+/.patches/4/4_4_HW3_jaxb_stax.patch
+/.patches/4/4_5_dependencies.patch
+/.patches/4/4_6_fix_convergence.patch
+/.patches/4/4_7_enforcer.patch
+/.patches/4/4_8_logging.patch
+/.patches/4/4_9_context.patch
+/.patches/4/4_10_persist.patch
+/.patches/5/5_1_HW4_upload_chunk.patch
+/.patches/5/5_2_HW4_webapp_users.patch
+/.patches/5/5_3_HW4_already_present.patch
+/.patches/5/5_4_HW4_parallel.patch
+/.patches/5/5_5_HW4_parallel2.patch
+/.patches/5/5_6_typesafe_config.patch
+/.patches/5/5_7_lombok.patch
+/.patches/6/6_1_HW5_model_sql.patch
+/.patches/6/6_2_HW5_dao_test.patch
+/.patches/6/6_3_HW5_add_PayloadProcessor.patch
+/.patches/6/6_4_HW5_add_CityProcessor.patch
+/.patches/6/6_5_web_services.patch
