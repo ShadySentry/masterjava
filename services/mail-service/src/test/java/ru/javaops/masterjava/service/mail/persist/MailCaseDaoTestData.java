@@ -29,14 +29,13 @@ public class MailCaseDaoTestData {
                 "<1111112019.0.1619074967547@localhost>","state2");
         logRecord3 = MailCase.of(TO_ADDRESSEES,CC_ADDRESSEES,"subject3",
                 "<1111112019.0.1619074967547@localhost>","state3");
-        CASES = ImmutableList.of(logRecord2,logRecord2,logRecord3);
+        CASES = ImmutableList.of(logRecord1,logRecord2,logRecord3);
     }
 
     public static void setUp(){
         MailCaseDao dao= DBIProvider.getDao(MailCaseDao.class);
         dao.clean();
         DBIProvider.getDBI().useTransaction(((conn, status) -> {
-            dao.insert(logRecord1);
             CASES.forEach(dao::insert);
         }));
     }
