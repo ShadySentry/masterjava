@@ -3,37 +3,4 @@ out
 target
 *.iml
 log
-patch 4/4_10_persist.patch
-patch 4/4_1_HW3_pom_structure.patch
-patch 4/4_2_HW3_thymeleaf_upload.patch
-patch 4/4_3_HW3_upload_servlet3.patch
-patch 4/4_4_HW3_jaxb_stax.patch
-patch 4/4_5_dependencies.patch
-patch 4/4_6_fix_convergence.patch
-patch 4/4_7_enforcer.patch
-patch 4/4_8_logging.patch
-patch 4/4_9_context.patch
-4/4_10_persist.patch
-4/4_1_HW3_pom_structure.patch
-4/4_2_HW3_thymeleaf_upload.patch
-4/4_3_HW3_upload_servlet3.patch
-4/4_4_HW3_jaxb_stax.patch
-4/4_5_dependencies.patch
-4/4_6_fix_convergence.patch
-4/4_7_enforcer.patch
-4/4_8_logging.patch
-4/4_9_context.patch
-5/5_7_lombok.patch
-5/5_6_typesafe_config.patch
-5/5_5_HW4_parallel2.patch
-5/5_4_HW4_parallel.patch
-5/5_3_HW4_already_present.patch
-5/5_2_HW4_webapp_users.patch
-5/5_1_HW4_upload_chunk.patch
-patch 5/5_7_lombok.patch
-patch 5/5_6_typesafe_config.patch
-patch 5/5_5_HW4_parallel2.patch
-patch 5/5_4_HW4_parallel.patch
-patch 5/5_3_HW4_already_present.patch
-patch 5/5_2_HW4_webapp_users.patch
-patch 5/5_1_HW4_upload_chunk.patch
+*.patch
