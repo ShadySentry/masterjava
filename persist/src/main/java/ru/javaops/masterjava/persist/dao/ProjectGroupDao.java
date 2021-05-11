@@ -8,6 +8,7 @@ import ru.javaops.masterjava.persist.model.ProjectGroup;
 import ru.javaops.masterjava.persist.model.UserGroup;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
@@ -23,7 +24,7 @@ public abstract class ProjectGroupDao implements AbstractDao{
     public abstract void insertBatch(@BindBean List<ProjectGroup> projectGroups);
 
     @SqlQuery("SELECT * FROM project_groups")
-    public abstract Set<UserGroup> getAll();
+    public abstract Set<ProjectGroup> getAll();
 
     @SqlQuery("SELECT project_id FROM project_groups where group_id =:it")
     public abstract Set<Integer> getProjectIds(@Bind int groupId);
