@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import one.util.streamex.StreamEx;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.dao.GroupDao;
 import ru.javaops.masterjava.persist.dao.ProjectDao;
@@ -48,7 +49,7 @@ public class ProjectGroupProcessor {
         }
     }
 
-    public Map<Group, Project> process(StaxStreamProcessor processor) throws XMLStreamException {
+    public Map<String, Group> process(StaxStreamProcessor processor) throws XMLStreamException {
         log.info("starting processing Projects and Groups");
 
 
@@ -62,8 +63,9 @@ public class ProjectGroupProcessor {
 
         while (processor.startElement("Project", "Projects")) {
             val projectName = processor.getAttribute("name");
-            processor.getReader().nextTag();
-            String description = processor.getText();
+//            processor.getReader().next();
+//            String description = processor.getText();
+            String description  = processor.getElementValue("description");
             Project loadedProject = new Project(projectName, description);
             if (!projects.containsKey(projectName)) {
                 newProjects.add(loadedProject);
@@ -95,9 +97,7 @@ public class ProjectGroupProcessor {
         projects=projectDao.getAsMap();
         groups=groupDao.getAsMap();
 
-
-        //get id's to create projectGroup relations
-        return null;
+        return StreamEx.of(newGroups).toMap(Group::getName, g -> g);
     }
 
     private void persistProjectsGroups(HashMap<String, Project> projects, HashMap<String,Group> groups, Map<String, Pair> projectGroups){
@@ -108,7 +108,5 @@ public class ProjectGroupProcessor {
             newProjectGroups.add(new ProjectGroup(projectId,groupId));
         }
         projectGroupDao.insertBatch(newProjectGroups);
-
-        //todo: return <Project:groups>
     }
 }
