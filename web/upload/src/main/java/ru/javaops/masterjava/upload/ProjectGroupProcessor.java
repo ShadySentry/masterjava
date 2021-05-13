@@ -63,16 +63,16 @@ public class ProjectGroupProcessor {
 
         while (processor.startElement("Project", "Projects")) {
             val projectName = processor.getAttribute("name");
-//            processor.getReader().next();
+            int event=processor.getReader().next();
 //            String description = processor.getText();
             String description  = processor.getElementValue("description");
             Project loadedProject = new Project(projectName, description);
             if (!projects.containsKey(projectName)) {
                 newProjects.add(loadedProject);
             }
-
-            String groupName = processor.getAttribute("name");
+            event=processor.getReader().next();
             while (processor.startElement("Group", "Project")) {
+                String groupName = processor.getAttribute("name");
                 Group loadedGroup = new Group();
                 loadedGroup.setName(groupName);
                 loadedGroup.setType(GroupType.valueOf(processor.getAttribute("type")));
