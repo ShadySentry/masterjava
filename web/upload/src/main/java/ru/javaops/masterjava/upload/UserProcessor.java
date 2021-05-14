@@ -48,6 +48,9 @@ public class UserProcessor {
 
         while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
             String cityRef = processor.getAttribute("city");  // unmarshal doesn't get city ref
+            if (processor.getText() != ru.javaops.masterjava.persist.model.UserFlag.deleted.name()) {
+                String[] groupRefs = processor.getAttribute("groupRefs").split(" ");
+            }
             ru.javaops.masterjava.xml.schema.User xmlUser = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.User.class);
             if (cities.get(cityRef) == null) {
                 failed.add(new FailedEmails(xmlUser.getEmail(), "City '" + cityRef + "' is not present in DB"));

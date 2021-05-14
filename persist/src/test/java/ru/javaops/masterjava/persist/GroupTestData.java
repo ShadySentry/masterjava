@@ -28,7 +28,7 @@ public class GroupTestData {
         ProjectTestData.init();
         ProjectTestData.setUp();
 
-        TOPJAVA_06 = new Group("topjava06", FINISHED, TOPJAVA_ID);
+        TOPJAVA_06 = new Group("topjava06", CURRENT, TOPJAVA_ID);
         TOPJAVA_07 = new Group("topjava07", FINISHED, TOPJAVA_ID);
         TOPJAVA_08 = new Group("topjava08", CURRENT, TOPJAVA_ID);
         MASTERJAVA_01 = new Group("masterjava01", CURRENT, MASTERJAVA_ID);

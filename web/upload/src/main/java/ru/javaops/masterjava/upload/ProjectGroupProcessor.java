@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import one.util.streamex.StreamEx;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.dao.GroupDao;
 import ru.javaops.masterjava.persist.dao.ProjectDao;
@@ -27,6 +26,7 @@ public class ProjectGroupProcessor {
     private final ProjectDao projectDao = DBIProvider.getDao(ProjectDao.class);
     private final GroupDao groupDao = DBIProvider.getDao(GroupDao.class);
     private final ProjectGroupDao projectGroupDao = DBIProvider.getDao(ProjectGroupDao.class);
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -63,14 +63,14 @@ public class ProjectGroupProcessor {
 
         while (processor.startElement("Project", "Projects")) {
             val projectName = processor.getAttribute("name");
-            int event=processor.getReader().next();
+            int event = processor.getReader().next();
 //            String description = processor.getText();
-            String description  = processor.getElementValue("description");
+            String description = processor.getElementValue("description");
             Project loadedProject = new Project(projectName, description);
             if (!projects.containsKey(projectName)) {
                 newProjects.add(loadedProject);
             }
-            event=processor.getReader().next();
+            event = processor.getReader().next();
             while (processor.startElement("Group", "Project")) {
                 String groupName = processor.getAttribute("name");
                 Group loadedGroup = new Group();
@@ -80,12 +80,12 @@ public class ProjectGroupProcessor {
                 if (!groups.containsKey(groupName)) {
                     newGroups.add(loadedGroup);
                 }
-                Pair projectGroupPair = new Pair(loadedProject,loadedGroup);
+                Pair projectGroupPair = new Pair(loadedProject, loadedGroup);
 
-                String key  = projectGroupPair.getProject().getName()
+                String key = projectGroupPair.getProject().getName()
                         .concat(projectGroupPair.getGroup().getName());
-                if (!loadedProjectGroups.containsKey(key)){
-                    loadedProjectGroups.put(key,projectGroupPair);
+                if (!loadedProjectGroups.containsKey(key)) {
+                    loadedProjectGroups.put(key, projectGroupPair);
                 }
             }
             //todo don`t need to check if projectGroup exists
@@ -94,18 +94,20 @@ public class ProjectGroupProcessor {
         projectDao.insertBatch(newProjects);
         groupDao.insertBatch(newGroups);
 
-        projects=projectDao.getAsMap();
-        groups=groupDao.getAsMap();
+        projects = projectDao.getAsMap();
+        groups = groupDao.getAsMap();
 
-        return StreamEx.of(newGroups).toMap(Group::getName, g -> g);
+        persistProjectsGroups(projects, groups, loadedProjectGroups);
+
+        return groups;
     }
 
-    private void persistProjectsGroups(HashMap<String, Project> projects, HashMap<String,Group> groups, Map<String, Pair> projectGroups){
+    private void persistProjectsGroups(Map<String, Project> projects, Map<String, Group> groups, Map<String, Pair> projectGroups) {
         List<ProjectGroup> newProjectGroups = new ArrayList<>();
-        for (Pair pair: projectGroups.values()){
+        for (Pair pair : projectGroups.values()) {
             Integer projectId = projects.get(pair.getProject().getName()).getId();
             Integer groupId = groups.get(pair.getGroup().getName()).getId();
-            newProjectGroups.add(new ProjectGroup(projectId,groupId));
+            newProjectGroups.add(new ProjectGroup(projectId, groupId));
         }
         projectGroupDao.insertBatch(newProjectGroups);
     }

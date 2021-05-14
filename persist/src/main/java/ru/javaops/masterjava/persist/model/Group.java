@@ -11,7 +11,7 @@ import ru.javaops.masterjava.persist.model.type.GroupType;
 @ToString(callSuper = true)
 public class Group extends BaseEntity {
 
-    @NonNull private String name;
-    @NonNull private GroupType type;
+    private @NonNull String name;
+    private @NonNull GroupType type;
     @NonNull @Column("project_id") private int projectId;
 }

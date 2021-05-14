@@ -23,7 +23,8 @@ public abstract class ProjectDao implements AbstractDao {
         return StreamEx.of(getAll()).toMap(Project::getName, g -> g);
     }
 
-    @SqlUpdate("INSERT INTO project (name, description)  VALUES (:name, :description)")
+    @SqlUpdate("INSERT INTO project (name, description)  VALUES (:name, :description)" +
+            "ON CONFLICT DO NOTHING")
     @GetGeneratedKeys
     public abstract int insertGeneratedId(@BindBean Project project);
 
@@ -31,6 +32,7 @@ public abstract class ProjectDao implements AbstractDao {
         int id = insertGeneratedId(project);
         project.setId(id);
     }
-    @SqlBatch("INSERT INTO project (name, description)  VALUES (:name, :description)")
+    @SqlBatch("INSERT INTO project (name, description)  VALUES (:name, :description)" +
+            "ON CONFLICT DO NOTHING")
     public abstract void insertBatch(@BindBean List<Project> projects);
 }
