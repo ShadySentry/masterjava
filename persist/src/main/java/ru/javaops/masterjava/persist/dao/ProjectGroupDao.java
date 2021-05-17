@@ -20,7 +20,7 @@ public abstract class ProjectGroupDao implements AbstractDao{
 
     }
 
-    @SqlBatch("INSERT INTO project_groups (project_id, group_id) VALUES (:projectId, :groupId)")
+    @SqlBatch("INSERT INTO project_groups (project_id, group_id) VALUES (:projectId, :groupId) ON CONFLICT DO NOTHING")
     public abstract void insertBatch(@BindBean List<ProjectGroup> projectGroups);
 
     @SqlQuery("SELECT * FROM project_groups")

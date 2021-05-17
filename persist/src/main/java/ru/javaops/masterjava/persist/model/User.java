@@ -11,14 +11,19 @@ import ru.javaops.masterjava.persist.model.type.UserFlag;
 @ToString(callSuper = true)
 public class User extends BaseEntity {
     @Column("full_name")
-    private @NonNull String fullName;
-    private @NonNull String email;
-    private @NonNull UserFlag flag;
+    private @NonNull
+    String fullName;
+    private @NonNull
+    String email;
+    private @NonNull
+    UserFlag flag;
     @Column("city_ref")
-    private @NonNull String cityRef;
+    private @NonNull
+    String cityRef;
+    private String[] groupRefs;
 
-    public User(Integer id, String fullName, String email, UserFlag flag, String cityRef) {
-        this(fullName, email, flag, cityRef);
-        this.id=id;
+    public User(Integer id, String fullName, String email, UserFlag flag, String cityRef, String[] groupRefs) {
+        this(fullName, email, flag, cityRef, groupRefs);
+        this.id = id;
     }
 }

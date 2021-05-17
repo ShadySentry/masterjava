@@ -32,6 +32,6 @@ public class PayloadProcessor {
         final StaxStreamProcessor processor = new StaxStreamProcessor(is);
         Map<String, Group> groups = projectGroupProcessor.process(processor);
         val cities = cityProcessor.process(processor);
-        return userProcessor.process(processor, cities, chunkSize);
+        return userProcessor.process(processor, cities, chunkSize, groups);
     }
 }

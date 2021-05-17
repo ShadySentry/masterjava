@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.dao.UserDao;
+import ru.javaops.masterjava.persist.dao.UserGroupDao;
 import ru.javaops.masterjava.persist.model.City;
+import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.persist.model.User;
 import ru.javaops.masterjava.persist.model.type.UserFlag;
 import ru.javaops.masterjava.upload.PayloadProcessor.FailedEmails;
@@ -30,13 +32,14 @@ public class UserProcessor {
 
     private static final JaxbParser jaxbParser = new JaxbParser(ObjectFactory.class);
     private static UserDao userDao = DBIProvider.getDao(UserDao.class);
+    private static UserGroupDao userGroupDao = DBIProvider.getDao(UserGroupDao.class);
 
     private ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_THREADS);
 
     /*
      * return failed users chunks
      */
-    public List<FailedEmails> process(final StaxStreamProcessor processor, Map<String, City> cities, int chunkSize) throws XMLStreamException, JAXBException {
+    public List<FailedEmails> process(final StaxStreamProcessor processor, Map<String, City> cities, int chunkSize, Map<String, Group> groups) throws XMLStreamException, JAXBException {
         log.info("Start processing with chunkSize=" + chunkSize);
 
         Map<String, Future<List<String>>> chunkFutures = new LinkedHashMap<>();  // ordered map (emailRange -> chunk future)
@@ -48,14 +51,28 @@ public class UserProcessor {
 
         while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
             String cityRef = processor.getAttribute("city");  // unmarshal doesn't get city ref
-            if (processor.getText() != ru.javaops.masterjava.persist.model.UserFlag.deleted.name()) {
-                String[] groupRefs = processor.getAttribute("groupRefs").split(" ");
-            }
+            String[] groupRefs = new String[0];
+            String groupRef = processor.getAttribute("groupRefs");
+            boolean groupIsPresent = true;
+
+
             ru.javaops.masterjava.xml.schema.User xmlUser = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.User.class);
+            if (groupRef != null) {
+                groupRefs = groupRef.split(" ");
+                for (String groupName : groupRefs) {
+                    if (!groups.containsKey(groupName)) {
+                        failed.add(new FailedEmails(xmlUser.getEmail(), "Group '" + groupName + "' is not present in DB"));
+                        groupIsPresent = false;
+                    }
+                }
+            }
+            boolean cityIsPresent = true;
             if (cities.get(cityRef) == null) {
                 failed.add(new FailedEmails(xmlUser.getEmail(), "City '" + cityRef + "' is not present in DB"));
-            } else {
-                final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()), cityRef);
+                cityIsPresent = false;
+            }
+            if (cityIsPresent && groupIsPresent) {
+                final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()), cityRef, groupRefs);
                 chunk.add(user);
                 if (chunk.size() == chunkSize) {
                     addChunkFutures(chunkFutures, chunk);
@@ -89,6 +106,7 @@ public class UserProcessor {
     private void addChunkFutures(Map<String, Future<List<String>>> chunkFutures, List<User> chunk) {
         String emailRange = String.format("[%s-%s]", chunk.get(0).getEmail(), chunk.get(chunk.size() - 1).getEmail());
         Future<List<String>> future = executorService.submit(() -> userDao.insertAndGetConflictEmails(chunk));
+
         chunkFutures.put(emailRange, future);
         log.info("Submit chunk: " + emailRange);
     }
