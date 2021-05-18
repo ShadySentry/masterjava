@@ -1,5 +1,6 @@
 package ru.javaops.masterjava.upload;
 
+import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import ru.javaops.masterjava.persist.DBIProvider;
@@ -17,10 +18,7 @@ import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -100,7 +98,12 @@ public class UserProcessor {
         if (!allAlreadyPresents.isEmpty()) {
             failed.add(new FailedEmails(allAlreadyPresents.toString(), "already presents"));
         }
+//        failed.get(0).emailsOrRange.substring(1,failed.get(0).emailsOrRange.length()-1).split(", ")
+        List<String> filedEmails= Arrays.asList(failed.get(0).emailsOrRange.substring(1,failed.get(0).emailsOrRange.length()-1).split(", "));
+
+
         return failed;
+
     }
 
     private void addChunkFutures(Map<String, Future<List<String>>> chunkFutures, List<User> chunk) {
