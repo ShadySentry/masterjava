@@ -12,14 +12,14 @@ import java.util.Set;
 @RegisterMapperFactory(EntityMapperFactory.class)
 public abstract class UserGroupDao implements AbstractDao {
 
-    @SqlUpdate("TRUNCATE user_group CASCADE")
+    @SqlUpdate("TRUNCATE users_groups CASCADE")
     @Override
     public abstract void clean();
 
-    @SqlBatch("INSERT INTO user_group (user_id, group_id) VALUES (:userId, :groupId)")
+    @SqlBatch("INSERT INTO users_groups (user_id, group_id) VALUES (:userId, :groupId)")
     public abstract void insertBatch(@BindBean List<UserGroup> userGroups);
 
-    @SqlQuery("SELECT user_id FROM user_group WHERE group_id=:it")
+    @SqlQuery("SELECT user_id FROM users_groups WHERE group_id=:it")
     public abstract Set<Integer> getUserIds(@Bind int groupId);
 
     public static List<UserGroup> toUserGroups(int userId, Integer... groupIds) {

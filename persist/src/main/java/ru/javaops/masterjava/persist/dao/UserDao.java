@@ -6,9 +6,11 @@ import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.BatchChunkSize;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import ru.javaops.masterjava.persist.DBIProvider;
+import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.persist.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
 public abstract class UserDao implements AbstractDao {
