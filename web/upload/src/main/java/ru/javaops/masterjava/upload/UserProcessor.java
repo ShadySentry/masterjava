@@ -1,6 +1,5 @@
 package ru.javaops.masterjava.upload;
 
-import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import ru.javaops.masterjava.persist.DBIProvider;
@@ -9,6 +8,7 @@ import ru.javaops.masterjava.persist.dao.UserGroupDao;
 import ru.javaops.masterjava.persist.model.City;
 import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.persist.model.User;
+import ru.javaops.masterjava.persist.model.UserGroup;
 import ru.javaops.masterjava.persist.model.type.UserFlag;
 import ru.javaops.masterjava.upload.PayloadProcessor.FailedEmails;
 import ru.javaops.masterjava.xml.schema.ObjectFactory;
@@ -18,7 +18,10 @@ import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,7 +76,7 @@ public class UserProcessor {
                 final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()), cityRef, groupRefs);
                 chunk.add(user);
                 if (chunk.size() == chunkSize) {
-                    addChunkFutures(chunkFutures, chunk);
+                    addChunkFutures(chunkFutures, chunk, groups);
                     chunk = new ArrayList<>(chunkSize);
                     id = userDao.getSeqAndSkip(chunkSize);
                 }
@@ -81,15 +84,19 @@ public class UserProcessor {
         }
 
         if (!chunk.isEmpty()) {
-            addChunkFutures(chunkFutures, chunk);
+            addChunkFutures(chunkFutures, chunk, groups);
         }
 
         List<String> allAlreadyPresents = new ArrayList<>();
+        List<User> savedUsers = chunk;
         chunkFutures.forEach((emailRange, future) -> {
             try {
                 List<String> alreadyPresentsInChunk = future.get();
                 log.info("{} successfully executed with already presents: {}", emailRange, alreadyPresentsInChunk);
                 allAlreadyPresents.addAll(alreadyPresentsInChunk);
+                for (String usersEmail : alreadyPresentsInChunk) {
+                    savedUsers.removeIf(user -> user.getEmail().compareToIgnoreCase(usersEmail) == 0);
+                }
             } catch (InterruptedException | ExecutionException e) {
                 log.error(emailRange + " failed", e);
                 failed.add(new FailedEmails(emailRange, e.toString()));
@@ -98,19 +105,28 @@ public class UserProcessor {
         if (!allAlreadyPresents.isEmpty()) {
             failed.add(new FailedEmails(allAlreadyPresents.toString(), "already presents"));
         }
-//        failed.get(0).emailsOrRange.substring(1,failed.get(0).emailsOrRange.length()-1).split(", ")
-        List<String> filedEmails= Arrays.asList(failed.get(0).emailsOrRange.substring(1,failed.get(0).emailsOrRange.length()-1).split(", "));
-
-
+        saveUserWithGroups(savedUsers, groups);
         return failed;
-
     }
 
-    private void addChunkFutures(Map<String, Future<List<String>>> chunkFutures, List<User> chunk) {
+    private void addChunkFutures(Map<String, Future<List<String>>> chunkFutures, List<User> chunk, Map<String, Group> groups) {
         String emailRange = String.format("[%s-%s]", chunk.get(0).getEmail(), chunk.get(chunk.size() - 1).getEmail());
         Future<List<String>> future = executorService.submit(() -> userDao.insertAndGetConflictEmails(chunk));
 
         chunkFutures.put(emailRange, future);
         log.info("Submit chunk: " + emailRange);
+    }
+
+    private void saveUserWithGroups(List<User> users, Map<String, Group> groups) {
+        List<UserGroup> userGroups = new ArrayList<>();
+        for (User user : users) {
+            for (String groupName : user.getGroupRefs()) {
+                UserGroup userGroup = new UserGroup(user.getId(), groups.get(groupName).getId());
+                if (!userGroups.contains(userGroup)) {
+                    userGroups.add(userGroup);
+                }
+            }
+        }
+        userGroupDao.insertBatch(userGroups);
     }
 }
