@@ -10,4 +10,9 @@ public class MailServiceImpl implements MailService {
     public void sendMail(List<Addressee> to, List<Addressee> cc, String subject, String body) {
         MailSender.sendMail(to, cc, subject, body);
     }
+
+    @Override
+    public GroupResult sendBulk(Set<Addressee> to, String subject, String body) {
+        return MailServiceExecutor.sendBulk(to, subject, body);
+    }
 }
