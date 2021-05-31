@@ -29,9 +29,7 @@
                         <resource>
                             <directory>${masterjava.config}</directory>
                             <includes>
-                                <include>
-                                    wsdl/mailService.wsdl
-                                </include>
+                                <include>wsdl/mailService.wsdl</include>
                             </includes>
                             <targetPath>WEB-INF</targetPath>
                         </resource>

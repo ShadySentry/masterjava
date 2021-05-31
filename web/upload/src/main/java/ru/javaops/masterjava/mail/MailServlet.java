@@ -29,12 +29,6 @@ public class MailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<User>users= userDao.getWithLimit(100);
 
-        out(req, resp,users);
-    }
-
-    private void out(HttpServletRequest req, HttpServletResponse resp, List<User> users) throws IOException {
-        resp.setCharacterEncoding("utf-8");
-
         final WebContext webContext = new WebContext(req, resp, req.getServletContext(), req.getLocale(),
                 ImmutableMap.of("users", users));
         engine.process("mail",webContext,resp.getWriter());
