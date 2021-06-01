@@ -16,6 +16,6 @@ public class MailServiceClient {
 
         MailService mailService = service.getPort(MailService.class);
         mailService.sendToGroup(ImmutableSet.of(
-                new Addressee("masterjava@javaops.ru", null)), null, "Subject", "Body");
+                new Addressee("eurohawk@gmail.com", null)), null, "Subject", "Body");
     }
 }
