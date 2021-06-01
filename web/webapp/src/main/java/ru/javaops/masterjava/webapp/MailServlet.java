@@ -1,8 +1,6 @@
-package ru.javaops.masterjava.mail;
+package ru.javaops.masterjava.webapp;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.WebContext;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.dao.UserDao;
@@ -19,7 +17,7 @@ import java.util.List;
 
 import static ru.javaops.masterjava.common.web.ThymeleafListener.engine;
 
-@WebServlet(urlPatterns = "/mail")
+@WebServlet(urlPatterns = "/")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10)
 public class MailServlet extends HttpServlet {
 

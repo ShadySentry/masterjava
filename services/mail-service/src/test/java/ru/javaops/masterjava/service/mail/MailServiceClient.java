@@ -17,5 +17,6 @@ public class MailServiceClient {
         MailService mailService = service.getPort(MailService.class);
         mailService.sendToGroup(ImmutableSet.of(
                 new Addressee("eurohawk@gmail.com", null)), null, "Subject", "Body");
+        mailService.sendBulk(ImmutableSet.of(new Addressee("eurohawk1@gmail.com", "shady")),"subkect","body");
     }
 }

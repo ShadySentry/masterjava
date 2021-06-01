@@ -1,4 +1,4 @@
-package ru.javaops.masterjava.mail;
+package ru.javaops.masterjava.webapp;
 
 import com.google.common.collect.ImmutableSet;
 import ru.javaops.masterjava.service.mail.Addressee;
