@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import ru.javaops.masterjava.ExceptionType;
 import ru.javaops.masterjava.persist.DBIProvider;
@@ -11,6 +12,7 @@ import ru.javaops.masterjava.service.mail.persist.MailCase;
 import ru.javaops.masterjava.service.mail.persist.MailCaseDao;
 import ru.javaops.web.WebStateException;
 
+import java.io.File;
 import java.util.Set;
 
 @Slf4j
@@ -38,6 +40,9 @@ public class MailSender {
 
             //  https://yandex.ru/blog/company/66296
             email.setHeaders(ImmutableMap.of("List-Unsubscribe", "<mailto:masterjava@javaops.ru?subject=Unsubscribe&body=Unsubscribe>"));
+
+            EmailAttachment attachment= MailConfig.attach("","","");
+            email.attach(attachment);
 
             email.send();
         } catch (EmailException e) {

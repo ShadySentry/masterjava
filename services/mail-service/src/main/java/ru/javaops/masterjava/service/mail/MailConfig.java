@@ -1,10 +1,7 @@
 package ru.javaops.masterjava.service.mail;
 
 import com.typesafe.config.Config;
-import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.HtmlEmail;
+import org.apache.commons.mail.*;
 import ru.javaops.masterjava.config.Configs;
 
 import javax.mail.Authenticator;
@@ -52,6 +49,20 @@ public class MailConfig {
 
     public static HtmlEmail createHtmlEmail() throws EmailException {
         return INSTANCE.prepareEmail(new HtmlEmail());
+    }
+
+    public static EmailAttachment attach(String path,String description,String name){
+        EmailAttachment attachment  = new EmailAttachment();
+        attachment.setPath(path);
+        attachment.setDisposition(EmailAttachment.ATTACHMENT);
+        if(description!=null){
+            attachment.setDisposition(description);
+        }
+        if (name!=null) {
+            attachment.setName(name);
+        }
+
+        return attachment;
     }
 
     @Override

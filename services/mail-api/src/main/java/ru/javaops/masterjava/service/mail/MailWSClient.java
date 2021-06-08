@@ -10,6 +10,8 @@ import ru.javaops.web.WsClient;
 
 import javax.xml.namespace.QName;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 public class MailWSClient {
@@ -40,6 +42,6 @@ public class MailWSClient {
 
     public static Set<Addressee> split(String addressees) {
         Iterable<String> split = Splitter.on(',').trimResults().omitEmptyStrings().split(addressees);
-        return ImmutableSet.copyOf(Iterables.transform(split, Addressee::new));
+        return ImmutableSet.copyOf(StreamSupport.stream(split.spliterator(), false).map(Addressee::new).collect(Collectors.toList()));
     }
 }
