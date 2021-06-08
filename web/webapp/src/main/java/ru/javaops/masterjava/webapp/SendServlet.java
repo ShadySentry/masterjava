@@ -10,12 +10,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
 
 @WebServlet("/send")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024,
-        maxFileSize = 1024 * 1024 * 5,
-        maxRequestSize = 1024 * 1024 * 5 * 5)
+@MultipartConfig
+//@MultipartConfig(fileSizeThreshold = 1024 * 1024,
+//        maxFileSize = 1024 * 1024 * 5,
+//        maxRequestSize = 1024 * 1024 * 5 * 5)
 @Slf4j
 public class SendServlet extends HttpServlet {
     @Override
@@ -28,7 +30,10 @@ public class SendServlet extends HttpServlet {
             String users = req.getParameter("users");
             String subject = req.getParameter("subject");
             String body = req.getParameter("body");
-            String path = req.getParameter("attachment");
+            Part part = req.getPart("attachment");
+
+//            String path = req.getParameter("attachment");
+            String path=part.getSubmittedFileName();
             String name = req.getParameter("name");
             String description = req.getParameter("description");
             GroupResult groupResult = MailWSClient.sendBulk(MailWSClient.split(users), subject, body);
