@@ -15,7 +15,6 @@
             <xs:element name="sendToGroupResponse" type="tns:sendToGroupResponse"/>
             <xs:element name="sendBulk" type="tns:sendBulk"/>
             <xs:element name="sendBulkResponse" type="tns:sendBulkResponse"/>
-
             <xs:complexType name="sendToGroup">
                 <xs:sequence>
                     <xs:element name="to" type="tns:addressee" minOccurs="0" maxOccurs="unbounded"/>

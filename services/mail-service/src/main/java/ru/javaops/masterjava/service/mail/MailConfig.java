@@ -53,6 +53,7 @@ public class MailConfig {
 
     public static EmailAttachment attach(String path,String description,String name){
         EmailAttachment attachment  = new EmailAttachment();
+
         attachment.setPath(path);
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         if(description!=null){

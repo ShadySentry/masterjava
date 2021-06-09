@@ -11,7 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @WebServlet("/send")
 @MultipartConfig
@@ -32,11 +35,13 @@ public class SendServlet extends HttpServlet {
             String body = req.getParameter("body");
             Part part = req.getPart("attachment");
 
-//            String path = req.getParameter("attachment");
-            String path=part.getSubmittedFileName();
-            String name = req.getParameter("name");
-            String description = req.getParameter("description");
-            GroupResult groupResult = MailWSClient.sendBulk(MailWSClient.split(users), subject, body);
+            File attachment = null;
+            if (part != null) {
+                log.info("Processing file with attachment: {}", part.getSubmittedFileName());
+                attachment = upload(part);
+                part.delete();
+            }
+            GroupResult groupResult = MailWSClient.sendBulk(MailWSClient.split(users), subject, body, attachment);
             result = groupResult.toString();
             log.info("Processing finished with result: {}", result);
         } catch (Exception e) {
@@ -44,5 +49,25 @@ public class SendServlet extends HttpServlet {
             result = e.toString();
         }
         resp.getWriter().write(result);
+    }
+
+    private static File upload(Part part) throws IOException {
+        if (part == null) {
+            return null;
+        }
+
+        String uploadDir = (new File(".")).getCanonicalPath();
+        InputStream input = part.getInputStream();
+        File savedFile = new File(uploadDir + "/" + part.getSubmittedFileName());
+        FileOutputStream output = new FileOutputStream(savedFile);
+        byte[] data = new byte[input.available()];
+        input.read(data);
+        output.write(data);
+        input.close();
+        output.close();
+
+        log.info("File {} uploaded to {}", part.getSubmittedFileName(), savedFile.getAbsolutePath());
+
+        return savedFile;
     }
 }

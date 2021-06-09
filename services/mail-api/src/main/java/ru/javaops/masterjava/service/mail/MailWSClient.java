@@ -9,6 +9,7 @@ import ru.javaops.web.WebStateException;
 import ru.javaops.web.WsClient;
 
 import javax.xml.namespace.QName;
+import java.io.File;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -33,9 +34,9 @@ public class MailWSClient {
         return status;
     }
 
-    public static GroupResult sendBulk(final Set<Addressee> to, final String subject, final String body) throws WebStateException {
+    public static GroupResult sendBulk(final Set<Addressee> to, final String subject, final String body, File attachment) throws WebStateException {
         log.info("Send bulk to '" + to + "' subject '" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
-        GroupResult result = WS_CLIENT.getPort().sendBulk(to, subject, body);
+        GroupResult result = WS_CLIENT.getPort().sendBulk(to, subject, body,attachment);
         log.info("Sent bulk with result: " + result);
         return result;
     }
@@ -44,4 +45,11 @@ public class MailWSClient {
         Iterable<String> split = Splitter.on(',').trimResults().omitEmptyStrings().split(addressees);
         return ImmutableSet.copyOf(StreamSupport.stream(split.spliterator(), false).map(Addressee::new).collect(Collectors.toList()));
     }
+
+//    public static GroupResult sendBulk(Set<Addressee> to, String subject, String body, File attachment) throws WebStateException {
+//        log.info("Send bulk to '" + to + "' subject '" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
+//        GroupResult result = WS_CLIENT.getPort().sendWithAttachment(to, subject, body,attachment);
+//        log.info("Sent bulk with result: " + result);
+//        return result;
+//    }
 }
