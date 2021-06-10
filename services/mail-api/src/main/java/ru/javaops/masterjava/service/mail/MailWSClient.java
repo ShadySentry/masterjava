@@ -2,7 +2,6 @@ package ru.javaops.masterjava.service.mail;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
 import lombok.extern.slf4j.Slf4j;
 import ru.javaops.web.WebStateException;
@@ -10,6 +9,8 @@ import ru.javaops.web.WsClient;
 
 import javax.xml.namespace.QName;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -34,9 +35,13 @@ public class MailWSClient {
         return status;
     }
 
-    public static GroupResult sendBulk(final Set<Addressee> to, final String subject, final String body, File attachment) throws WebStateException {
-        log.info("Send bulk to '" + to + "' subject '" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
-        GroupResult result = WS_CLIENT.getPort().sendBulk(to, subject, body,attachment);
+    public static GroupResult sendBulk(final Set<Addressee> to, final String subject, final String body, File attachment) throws WebStateException, IOException {
+        log.info("Send bulk to '" + to + "' subject '" + subject + "file: " + attachment.getName() + " size:" + attachment.getTotalSpace() / 1024 +
+                (log.isDebugEnabled() ? "\nbody=" + body : ""));
+        FileInputStream input = new FileInputStream(attachment);
+        byte[] fileData = new byte[input.available()];
+        input.read(fileData);
+        GroupResult result = WS_CLIENT.getPort().sendBulk(to, subject, body, fileData);
         log.info("Sent bulk with result: " + result);
         return result;
     }

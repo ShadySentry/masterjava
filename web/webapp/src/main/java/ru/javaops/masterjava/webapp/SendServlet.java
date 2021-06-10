@@ -18,9 +18,6 @@ import java.io.InputStream;
 
 @WebServlet("/send")
 @MultipartConfig
-//@MultipartConfig(fileSizeThreshold = 1024 * 1024,
-//        maxFileSize = 1024 * 1024 * 5,
-//        maxRequestSize = 1024 * 1024 * 5 * 5)
 @Slf4j
 public class SendServlet extends HttpServlet {
     @Override

@@ -5,7 +5,6 @@ import ru.javaops.web.WebStateException;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-import java.io.File;
 import java.util.Set;
 
 @WebService(targetNamespace = "http://mail.javaops.ru/")
@@ -27,7 +26,6 @@ public interface MailService {
             @WebParam(name = "to") Set<Addressee> to,
             @WebParam(name = "subject") String subject,
             @WebParam(name = "body") String body,
-            @WebParam(name="attachment") File file
-            ) throws WebStateException;
+            @WebParam(name="attachment") byte[] attachment) throws WebStateException;
 
 }

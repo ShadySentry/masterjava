@@ -34,6 +34,7 @@
                     <xs:element name="to" type="tns:addressee" maxOccurs="unbounded"/>
                     <xs:element name="subject" type="xs:string" minOccurs="0"/>
                     <xs:element name="body" type="xs:string" minOccurs="1"/>
+                    <xs:element name="attachment" type="xs:base64Binary" minOccurs="0"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="sendBulkResponse">
