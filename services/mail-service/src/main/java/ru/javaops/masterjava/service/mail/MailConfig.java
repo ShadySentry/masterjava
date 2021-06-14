@@ -51,16 +51,17 @@ public class MailConfig {
         return INSTANCE.prepareEmail(new HtmlEmail());
     }
 
-    public static EmailAttachment attach(String path,String description,String name){
+    public static EmailAttachment attach(String path,String name, String description){
         EmailAttachment attachment  = new EmailAttachment();
-
         attachment.setPath(path);
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
-        if(description!=null){
-            attachment.setDisposition(description);
-        }
+
         if (name!=null) {
             attachment.setName(name);
+        }
+
+        if(description!=null){
+            attachment.setDescription(description);
         }
 
         return attachment;

@@ -23,7 +23,7 @@ public class MailServiceExecutor {
         final CompletionService<MailResult> completionService = new ExecutorCompletionService<>(mailExecutor);
 
         List<Future<MailResult>> futures = StreamEx.of(addressees)
-                .map(addressee -> completionService.submit(() -> MailSender.sendTo(addressee, subject, body)))
+                .map(addressee -> completionService.submit(() -> MailSender.sendTo(addressee, subject, body, attachment)))
                 .toList();
 
         return new Callable<GroupResult>() {
