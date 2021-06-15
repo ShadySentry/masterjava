@@ -35,6 +35,9 @@
                                     <!--https://ant.apache.org/manual/Types/selectors.html-->
                                     <fileset dir="${masterjava.config}/wsdl" includes="mailService.wsdl,common.xsd"/>
                                 </copy>
+                                <copy todir="target/mail/WEB-INF">
+                                    <fileset dir="${masterjava.config}" includes="version.html"/>
+                                </copy>
                             </target>
                         </configuration>
                     </execution>
