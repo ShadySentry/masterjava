@@ -1,6 +1,8 @@
 --liquibase formatted sql
 
 --changeset gkislin:1
+UPDATE DATABASECHANGELOGLOCK SET LOCKED=0, LOCKGRANTED=null, LOCKEDBY=null where ID=1;
+
 CREATE SEQUENCE common_seq START 100000;
 
 CREATE TABLE city (
