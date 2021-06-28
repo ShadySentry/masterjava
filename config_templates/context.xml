@@ -42,7 +42,7 @@
               testOnBorrow="true"
               logAbandoned="true"
               driverClassName="org.postgresql.Driver"
-              username="user"
+              username="masterjava_user"
               password="password"
               url="jdbc:postgresql://localhost:5432/masterjava"/>
 
