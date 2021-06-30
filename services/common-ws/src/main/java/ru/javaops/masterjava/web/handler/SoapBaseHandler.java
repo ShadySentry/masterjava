@@ -8,6 +8,7 @@ import javax.xml.ws.handler.MessageContext;
 import java.util.Set;
 
 public abstract class SoapBaseHandler implements MessageHandler<MessageHandlerContext> {
+    
 
     public Set<QName> getHeaders() {
         return null;

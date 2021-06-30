@@ -30,6 +30,10 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public GroupResult sendBulk(Set<Addressee> to, String subject, String body, List<Attachment> attachments) throws WebStateException {
-        return MailServiceExecutor.sendBulk(to, subject, body, attachments);
+        GroupResult result= MailServiceExecutor.sendBulk(to, subject, body, attachments);
+
+        wsContext.getMessageContext().put("success",result.getSuccess());
+        wsContext.getMessageContext().put("failed",result.getFailed().size());
+        return result;
     }
 }
