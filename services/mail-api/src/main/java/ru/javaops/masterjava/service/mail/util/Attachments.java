@@ -6,9 +6,7 @@ import ru.javaops.masterjava.service.mail.Attachment;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class Attachments {
     public static Attachment getAttachment(String name, InputStream inputStream) {
@@ -40,5 +38,16 @@ public class Attachments {
         public String getName() {
             return "";
         }
+    }
+
+    public static byte[] asByteArray(Attachment attachment) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        attachment.getDataHandler().writeTo(outputStream);
+        return outputStream.toByteArray();
+    }
+
+    public static Attachment fromByteArray(String fileName,byte[] bytes) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        return getAttachment(fileName, inputStream);
     }
 }

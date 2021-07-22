@@ -1,14 +1,19 @@
 package ru.javaops.masterjava.service.mail.listeners;
 
+import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
+import ru.javaops.masterjava.service.mail.Attachment;
 import ru.javaops.masterjava.service.mail.MailServiceExecutor;
 import ru.javaops.masterjava.service.mail.MailWSClient;
+import ru.javaops.masterjava.service.mail.util.Attachments;
 
 import javax.jms.*;
 import javax.naming.InitialContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.Collections;
 
 @WebListener
@@ -39,8 +44,21 @@ public class JmsMailListener implements ServletContextListener {
                             String body = tm.getStringProperty("body");
                             String subject = tm.getStringProperty("subject");
                             String users = tm.getStringProperty("users");
+                            Attachment attachment = null;
+                            try {
+                                String attachName = tm.getStringProperty("attachName");
+                                if(attachName!=null){
+                                    byte[] bytes=(byte[]) tm.getObject();
+                                    attachment = Attachments.fromByteArray(attachName, (byte[]) tm.getObject());
+//                                    ByteArrayInputStream out = new ByteArrayInputStream((byte[]) tm.getObject());
+                                    log.info("JmsMailListener attachment "+Arrays.toString(bytes));
+                                }
+                            } catch (JMSException e) {
+                                log.error("error during attachment processing " + e);
+                            }
 
-                            MailServiceExecutor.sendBulk(MailWSClient.split(users), subject, body, Collections.emptyList());
+                            MailServiceExecutor.sendBulk(MailWSClient.split(users), subject, body, attachment==null?Collections.emptyList():
+                                    ImmutableList.of(attachment));
                             log.info("Received TextMessage with receivers '{}' subject '{}' && text '{}'",
                                     users, subject, body);
                         }

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.lang.IllegalStateException;
+import java.util.Arrays;
 import java.util.List;
 
 @WebServlet("/sendJms")
@@ -80,8 +81,15 @@ public class JmsSendServlet extends HttpServlet {
         message.setStringProperty("subject", subject);
         message.setStringProperty("body", body);
         if(attachments!=null){
-            message.setStringProperty("attachName",attachments.get(0).getName());
-            message.setObjectProperty("attach",attachments.get(0));
+            try {
+                message.setStringProperty("attachName",attachments.get(0).getName());
+                byte[] attach= Attachments.asByteArray(attachments.get(0));
+                log.info("JMSSendServlet attachment "+Arrays.toString(attach));
+                message.setObject(attach);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            message.setObjectProperty("attach",attachments.get(0));
 //            message.setObject(attachments.get(0).getDataHandler().getContent());
         }
         producer.send(message);
