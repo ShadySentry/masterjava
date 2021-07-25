@@ -28,7 +28,9 @@ public class JmsMailListener implements ServletContextListener {
             InitialContext initCtx = new InitialContext();
             QueueConnectionFactory connectionFactory =
                     (QueueConnectionFactory) initCtx.lookup("java:comp/env/jms/ConnectionFactory");
-            connection = connectionFactory.createQueueConnection();
+            if(connection==null){
+                connection = connectionFactory.createQueueConnection();
+            }
             QueueSession queueSession = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
             Queue queue = (Queue) initCtx.lookup("java:comp/env/jms/queue/MailQueue");
             QueueReceiver receiver = queueSession.createReceiver(queue);
@@ -55,6 +57,7 @@ public class JmsMailListener implements ServletContextListener {
                                 }
                             } catch (JMSException e) {
                                 log.error("error during attachment processing " + e);
+                                connection.close();
                             }
 
                             MailServiceExecutor.sendBulk(MailWSClient.split(users), subject, body, attachment==null?Collections.emptyList():

@@ -34,9 +34,15 @@ public class JmsSendServlet extends HttpServlet {
         try {
             InitialContext initCtx = new InitialContext();
             ConnectionFactory connectionFactory = (ConnectionFactory) initCtx.lookup("java:comp/env/jms/ConnectionFactory");
-            connection = connectionFactory.createConnection();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            producer = session.createProducer((Destination) initCtx.lookup("java:comp/env/jms/queue/MailQueue"));
+            if (connection==null) {
+                connection = connectionFactory.createConnection();
+            }
+            if (session==null) {
+                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            }
+            if (producer==null) {
+                producer = session.createProducer((Destination) initCtx.lookup("java:comp/env/jms/queue/MailQueue"));
+            }
         } catch (Exception e) {
             throw new IllegalStateException("JMS init failed", e);
         }

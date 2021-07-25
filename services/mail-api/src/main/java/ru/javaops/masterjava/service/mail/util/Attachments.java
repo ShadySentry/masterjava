@@ -6,6 +6,7 @@ import ru.javaops.masterjava.service.mail.Attachment;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import java.awt.datatransfer.DataFlavor;
 import java.io.*;
 
 public class Attachments {
@@ -41,6 +42,7 @@ public class Attachments {
     }
 
     public static byte[] asByteArray(Attachment attachment) throws IOException {
+        //todo: fix content transfer
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         attachment.getDataHandler().writeTo(outputStream);
         return outputStream.toByteArray();
