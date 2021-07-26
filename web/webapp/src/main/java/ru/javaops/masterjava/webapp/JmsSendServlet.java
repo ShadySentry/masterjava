@@ -60,7 +60,7 @@ public class JmsSendServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String result;
         try {
             log.info("Start sending");
@@ -95,8 +95,6 @@ public class JmsSendServlet extends HttpServlet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            message.setObjectProperty("attach",attachments.get(0));
-//            message.setObject(attachments.get(0).getDataHandler().getContent());
         }
         producer.send(message);
         return "Successfully sent JMS message";
