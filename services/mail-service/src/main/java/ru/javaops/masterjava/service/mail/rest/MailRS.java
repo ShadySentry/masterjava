@@ -23,6 +23,7 @@ public class MailRS {
     @POST
     @Path("send")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     public GroupResult send(@NotBlank @FormParam("users") String users,
                             @FormParam("subject") String subject,
                             @NotBlank @FormParam("body") String body) throws WebStateException {
