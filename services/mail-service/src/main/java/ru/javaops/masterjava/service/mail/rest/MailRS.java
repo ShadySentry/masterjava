@@ -1,6 +1,9 @@
 package ru.javaops.masterjava.service.mail.rest;
 
 
+import javafx.scene.Group;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.hibernate.validator.constraints.NotBlank;
 import ru.javaops.masterjava.service.mail.GroupResult;
 import ru.javaops.masterjava.service.mail.MailServiceExecutor;
@@ -9,6 +12,8 @@ import ru.javaops.masterjava.web.WebStateException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.InputStream;
 import java.util.Collections;
 
 @Path("/")
@@ -22,12 +27,15 @@ public class MailRS {
 
     @POST
     @Path("send")
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public GroupResult send(@NotBlank @FormParam("users") String users,
-                            @FormParam("subject") String subject,
-                            @NotBlank @FormParam("body") String body) throws WebStateException {
-
-        return MailServiceExecutor.sendBulk(MailWSClient.split(users), subject, body, Collections.emptyList());
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response send(@NotBlank @FormDataParam("users") String users,
+                         @FormDataParam("subject") String subject,
+                         @FormDataParam("body") String body,
+                         @FormDataParam("attach")InputStream attachStream,
+                         @FormDataParam("attach") FormDataContentDisposition fileDetail ) throws WebStateException {
+        String t = subject;
+        GroupResult result = MailServiceExecutor.sendBulk(MailWSClient.split(users), subject, body, Collections.emptyList());
+        return Response.status(200).build();
     }
 }

@@ -82,6 +82,8 @@
         $.post({
             url: url,
             data: data,
+            // contentType: "multipart/form-data; boundary=----webkitformboundary2fvqbgcbynvtvptx",
+            // boundary: "----webkitformboundary2fvqbgcbynvtvptx",
             contentType: false,
             processData: false
         }).done(function (result) {
